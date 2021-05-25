@@ -47,7 +47,13 @@ void izbornik() {
 
 				system("cls");
 				otvaranje_clanovi();
+				dodaj_clan(&membHead);
+				fread(&brojClanova, sizeof(int), 1, fp);
+				fseek(fp, 0, SEEK_SET);
+				brojClanova++;
+				fwrite(&brojClanova, sizeof(int), 1, fp);
 
+				fclose(fp);
 				break;
 			case 27:
 				exit(-1);
@@ -140,9 +146,25 @@ void provjera_Kreiranje_file(const char*ime){
 
 }
 
-void dodaj_clan(MEMBER** h, MEMBER** t, MEMBER* novi) {
-	if()
-
+void dodaj_clan(MEMBER** h) {
+	MEMBER* temp = (MEMBER*)malloc(sizeof(MEMBER));
+	MEMBER* zadnji = *h;
+	temp->id = brojClanova + 1;
+	printf("Unesite ime clana: ");
+	strcpy(temp->ime, unos(20));
+	printf("Unesite prezime clana: ");
+	strcpy(temp->prezime, unos(30));
+	temp->next = NULL;
+	if (*h == NULL) {
+		temp->prev = NULL;
+		*h = temp;
+		return;
+	}
+	while (zadnji->next != NULL)
+		zadnji = zadnji->next;
+	zadnji->next = temp;
+	temp->prev = zadnji;
+	return;
 }
 
 void otvaranje_clanovi() {
@@ -156,4 +178,14 @@ void otvaranje_clanovi() {
 		system("pause");
 		exit(-1);
 	}
+}
+
+char *unos(int broj) {
+	char* temp = (char*)malloc(broj * sizeof(char));
+	fgets(temp, broj - 1, stdin);
+	int tempc = 0;
+	while (*(temp + tempc) != '\n')
+		++tempc;
+	*(temp + tempc) = '\0';
+	return temp;
 }

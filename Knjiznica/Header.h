@@ -30,6 +30,7 @@ void izbornik();
 void citanje_clan(MEMBER**,MEMBER**,FILE*);
 void ispis_liste_clanova(MEMBER*);
 void provjera_Kreiranje_file(const char*);
-void dodaj_clan(MEMBER**, MEMBER**, MEMBER* );
+void dodaj_clan(MEMBER**);
 void otvaranje_clanovi();
+char* unos(int);
 #endif
