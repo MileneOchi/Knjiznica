@@ -1,7 +1,8 @@
 #pragma once
 #ifndef HEADER_H
 #define HEADER_H
-
+#include <stdio.h>
+#include <stdlib.h>
 typedef struct Knjiga {
 	int id;
 	char ime[30];
@@ -27,4 +28,8 @@ typedef struct Clan {
 void izbornik();
 
 void citanje_clan(MEMBER**,MEMBER**,FILE*);
+void ispis_liste_clanova(MEMBER*);
+void provjera_Kreiranje_file(const char*);
+void dodaj_clan(MEMBER**, MEMBER**, MEMBER* );
+void otvaranje_clanovi();
 #endif
