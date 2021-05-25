@@ -73,6 +73,7 @@ void izbornik() {
 			switch (choice_two) {
 			case '1':
 				system("cls");
+
 			}
 			break;
 
@@ -85,4 +86,11 @@ void izbornik() {
 
 
 
+}
+
+void citanjeClan(MEMBER**h,MEMBER**t,FILE*fp) {
+	if (fp != NULL) {
+		fclose(fp);
+		fp = NULL;
+	}
 }
