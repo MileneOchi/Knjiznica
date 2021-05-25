@@ -4,8 +4,13 @@
 #include<stdlib.h>
 #include<string.h>
 #include "Header.h"
-
+extern FILE* fp;
+FILE* fp = NULL;
 void izbornik() {
+	BOOK* bookHead = NULL;
+	BOOK* bookTail = NULL;
+	BOOK* bookTemp = NULL;
+
 	char choice;
 	char choice_two;
 	do {

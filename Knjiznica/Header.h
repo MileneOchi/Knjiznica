@@ -18,11 +18,13 @@ typedef struct Member {
 	int id;
 	int book;
 	int books[10];
-	char name[20];
-	char lastName[30];
+	char ime[20];
+	char prezime[30];
 	struct Member* next;
 	struct Member* prev;
 } MEMBER;
 
 void izbornik();
+
+void readBookFile(BOOK**,BOOK**,FILE*);
 #endif
