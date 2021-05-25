@@ -24,5 +24,5 @@ typedef struct Member {
 	struct Member* prev;
 } MEMBER;
 
-
+void izbornik();
 #endif
