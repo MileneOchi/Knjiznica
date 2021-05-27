@@ -25,12 +25,24 @@ typedef struct Clan {
 	struct Clan* prev;
 } MEMBER;
 
-void izbornik();
+typedef struct Lista {
+	struct Clan* glava;
+	struct Clan* rep;
+}LISTA;
 
-void citanje_clan(MEMBER**,MEMBER**,FILE*);
+void izbornik();
+MEMBER* zapisi_clana(void);
+MEMBER* dodaj_novu_nodu(MEMBER*);
+void init_list_mem(MEMBER*,MEMBER*);
+void init_list(LISTA*);
+void dodaj_clan(LISTA*, MEMBER*);
+void dodaj_clan_mem(MEMBER*, MEMBER*,MEMBER*);
+//MEMBER* citanje_clan(MEMBER**,MEMBER**,FILE*);
 void ispis_liste_clanova(MEMBER*);
 void provjera_Kreiranje_file(const char*);
-void dodaj_clan(MEMBER**);
+
+void ispis_clanova(LISTA*);
 void otvaranje_clanovi();
-char* unos(int);
+void unos_char(char*);
+LISTA* ucitaj_podatke(char*);
 #endif

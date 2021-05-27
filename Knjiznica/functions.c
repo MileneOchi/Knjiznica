@@ -8,7 +8,7 @@ extern FILE* fp;
 FILE* fp = NULL;
 
 static int brojClanova = 0;
-static int brojKnjiga= 0;
+static int brojKnjiga = 0;
 
 void izbornik() {
 	provjera_Kreiranje_file("clanovi.bin");
@@ -17,8 +17,13 @@ void izbornik() {
 	BOOK* bookTemp = NULL;
 	MEMBER* membHead = NULL;
 	MEMBER* membTail = NULL;
+	LISTA* popisClanova;
 	char choice;
 	char choice_two;
+	//membHead = napravi_listu();
+	//do {
+	//	membHead = dodaj_novu_nodu(membHead);
+	//} while (membHead != NULL);
 	do {
 		system("cls");
 		printf("            GLAVNI IZBORNIK           \n");
@@ -30,6 +35,7 @@ void izbornik() {
 		choice = _getch();
 		switch (choice) {
 		case'1':
+			do{
 			system("cls");
 			printf("Upravljanje clanovi\n");
 			printf("1.Lista clanova\n");
@@ -40,24 +46,37 @@ void izbornik() {
 			switch (choice_two) {
 			case '1':
 				system("cls");
-				citanje_clan(&membHead,&membTail,fp);
 				ispis_liste_clanova(membHead);
 				break;
 			case'2':
 
 				system("cls");
-				otvaranje_clanovi();
-				dodaj_clan(&membHead);
-				fread(&brojClanova, sizeof(int), 1, fp);
+				zapisi_clana();
+				do{
+					choice_two = _getch();
+				}while(choice_two != 'z');
+				//otvaranje_clanovi();
+				//dodaj_clan(&membHead);
+				/*fread(&brojClanova, sizeof(int), 1, fp);
 				fseek(fp, 0, SEEK_SET);
 				brojClanova++;
 				fwrite(&brojClanova, sizeof(int), 1, fp);
 
-				fclose(fp);
+				fclose(fp);*/
 				break;
+			case '3':
+				system("cls");
+				popisClanova = ucitaj_podatke("clanoviDrugi.bin");
+				ispis_clanova(popisClanova);
+				do{
+					choice_two = _getch();
+				}while(choice_two != 'z');
+				break;
+
 			case 27:
 				exit(-1);
 			}
+			}while(choice_two != '0');
 			break;
 		case'2':
 			system("cls");
@@ -109,28 +128,19 @@ void izbornik() {
 
 }
 
-void citanje_clan(MEMBER**h,MEMBER**t,FILE*fp) {
-	fp = fopen("clanovi.bin", "rb+" );
-	if (fp = NULL) {
-		perror("FILE ERROR");
-		system("pause");
-		exit(-1);
-	}
-	
 
-}
 
-void ispis_liste_clanova(MEMBER*h) {
-	MEMBER* temp = NULL;
-	while (h != NULL) {
-		printf("ID: %d\tIme: %s\tPrezime: %s", h->id, h->ime, h->prezime);
-		temp = h;
+void ispis_liste_clanova(MEMBER* h) {
+	MEMBER* temp = h;
+	while (temp != NULL) {
+
+		printf("ID: %d\tIme: %s\tPrezime: %s", temp->id, temp->ime, temp->prezime);
 		h = h->next;
 	}
-
+	printf("\n");
 }
 
-void provjera_Kreiranje_file(const char*ime){
+void provjera_Kreiranje_file(const char* ime) {
 	fp = fopen(ime, "rb+");
 	if (fp == NULL) {
 		fp = fopen(ime, "ab+");
@@ -138,34 +148,93 @@ void provjera_Kreiranje_file(const char*ime){
 			perror("Kreiranje nemoguce");
 			exit(-1);
 		}
-		else {
-			fclose(fp);
-			fp = NULL;
-		}
 	}
 
 }
+void init_list(LISTA* lista){
+	lista->glava->next = lista->rep;
+	lista->rep->prev = lista->glava;
+}
 
-void dodaj_clan(MEMBER** h) {
-	MEMBER* temp = (MEMBER*)malloc(sizeof(MEMBER));
-	MEMBER* zadnji = *h;
-	temp->id = brojClanova + 1;
-	printf("Unesite ime clana: ");
-	strcpy(temp->ime, unos(20));
-	printf("Unesite prezime clana: ");
-	strcpy(temp->prezime, unos(30));
-	temp->next = NULL;
-	if (*h == NULL) {
-		temp->prev = NULL;
-		*h = temp;
+void init_list_mem(MEMBER* glava, MEMBER* rep){
+	glava->next = rep;
+	rep->prev = glava;
+}
+void dodaj_clan_mem(MEMBER* glava, MEMBER*rep, MEMBER*temp){
+		if (glava == NULL) {
+		glava = temp;
 		return;
 	}
-	while (zadnji->next != NULL)
-		zadnji = zadnji->next;
-	zadnji->next = temp;
-	temp->prev = zadnji;
-	return;
+	else if (glava != NULL && rep == NULL) {
+		rep = temp;
+		init_list_mem(glava,rep);
+		return;
+	}
+	else {
+		temp->prev = rep;
+		rep->next = temp;
+		rep = temp;
+		return;
+	}
+
 }
+
+void dodaj_clan(LISTA* dll, MEMBER* temp) {
+	if (dll->glava == NULL) {
+		dll->glava = temp;
+		return;
+	}
+	else if (dll->glava != NULL && dll->rep == NULL) {
+		dll->rep = temp;
+		init_list(dll);
+		return;
+	}
+	else {
+		temp->prev = dll->rep;
+		dll->rep->next = temp;
+		dll->rep = temp;
+		return;
+	}
+}
+void obrisi_clana(LISTA* dll, int id_clan){
+	MEMBER* trenutni = nadi_clana(dll, id_clan);
+	MEMBER* prethodni = trenutni->prev;
+	MEMBER* sljedeci = trenutni->next;
+
+	prethodni->next = sljedeci;
+	sljedeci->prev = prethodni;
+	free(trenutni);
+}
+MEMBER* nadi_clana(LISTA* dll, int id){	
+	MEMBER* clan = dll->glava;
+	while(clan->id != id){
+		clan = clan->next;
+	}
+	return clan;
+}
+
+void ispis_clanova(LISTA* lista){
+	MEMBER* pointer = lista->glava;
+	printf("\n");
+	if(pointer !=NULL){
+		printf("%d ", pointer->id);
+	}
+	while(pointer->next != NULL){
+		printf("%d	", pointer->id);
+		pointer = pointer->next;
+	}
+}
+LISTA* ucitaj_podatke(char* ime_datoteke){
+	LISTA* lista = (LISTA*)calloc(1, sizeof(LISTA));
+	provjera_Kreiranje_file(ime_datoteke);
+	MEMBER* clan =(MEMBER*)calloc(1, sizeof(MEMBER));
+	while (fread(clan, sizeof(MEMBER), 1, fp)) {
+		dodaj_clan(lista, clan);
+		clan =(MEMBER*)calloc(1, sizeof(MEMBER));
+	}
+	return lista;
+}
+
 
 void otvaranje_clanovi() {
 	if (fp != NULL) {
@@ -180,7 +249,7 @@ void otvaranje_clanovi() {
 	}
 }
 
-char *unos(int broj) {
+char* unos(int broj) {
 	char* temp = (char*)malloc(broj * sizeof(char));
 	fgets(temp, broj - 1, stdin);
 	int tempc = 0;
@@ -189,3 +258,64 @@ char *unos(int broj) {
 	*(temp + tempc) = '\0';
 	return temp;
 }
+
+MEMBER* zapisi_clana(void) {
+	MEMBER* headNode = (MEMBER*)calloc(1, sizeof(MEMBER));
+	if (headNode == NULL) {
+		perror("kreiranje liste na pocetku");
+		return NULL;
+	}
+	else {
+		scanf( "%d", &headNode->id);
+		scanf( "%d", &headNode->book);
+		scanf( "%d", &headNode->books);
+		scanf( "%s", &headNode->ime);
+		scanf( "%s", &headNode->prezime);
+	}
+	FILE* pointer = fopen("clanoviDrugi.bin", "ab+");
+	if (pointer == NULL) {
+		perror("File error");
+		system("pause");
+		exit(-1);
+	}
+	fwrite(headNode, sizeof(MEMBER), 1, pointer);
+	fclose(pointer);
+}
+
+MEMBER* dodaj_novu_nodu(MEMBER* headNode) {
+	MEMBER* newHeadNode = (MEMBER*)calloc(1, sizeof(MEMBER));
+	if (newHeadNode == NULL) {
+		perror("Dodavanje novog clana");
+		return headNode;
+	}
+	else {
+		fscanf(fp, "%d", &headNode->id);
+		fscanf(fp, "%d", &headNode->book);
+		fscanf(fp, "%d", &headNode->books);
+		fscanf(fp, "%s", &headNode->ime);
+		fscanf(fp, "%s", &headNode->prezime);
+	}
+	return newHeadNode;
+}
+
+
+/*
+MEMBER* zadnji = *h;
+temp->id = brojClanova + 1;
+printf("Unesite ime clana: ");
+strcpy(temp->ime, unos(20));
+printf("Unesite prezime clana: ");
+strcpy(temp->prezime, unos(30));
+temp->next = NULL;
+if (*h == NULL) {
+	temp->prev = NULL;
+	*h = temp;
+	return;
+}
+while (zadnji->next != NULL)
+	zadnji = zadnji->next;
+zadnji->next = temp;
+temp->prev = zadnji;
+return;
+*/
+//}
