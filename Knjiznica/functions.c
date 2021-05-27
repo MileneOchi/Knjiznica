@@ -7,23 +7,14 @@
 extern FILE* fp;
 FILE* fp = NULL;
 
-static int brojClanova = 0;
+static int zad_id_Clanova ;
 static int brojKnjiga = 0;
 
 void izbornik() {
-	provjera_Kreiranje_file("clanovi.bin");
-	BOOK* bookHead = NULL;
-	BOOK* bookTail = NULL;
-	BOOK* bookTemp = NULL;
-	MEMBER* membHead = NULL;
-	MEMBER* membTail = NULL;
 	LISTA* popisClanova;
 	char choice;
 	char choice_two;
-	//membHead = napravi_listu();
-	//do {
-	//	membHead = dodaj_novu_nodu(membHead);
-	//} while (membHead != NULL);
+
 	do {
 		system("cls");
 		printf("            GLAVNI IZBORNIK           \n");
@@ -46,35 +37,25 @@ void izbornik() {
 			switch (choice_two) {
 			case '1':
 				system("cls");
-				ispis_liste_clanova(membHead);
+				popisClanova = ucitaj_podatke("clanovi.bin");
+				ispis_clanova(popisClanova);
+				do {
+					choice_two = _getch();
+				} while (choice_two != 'z');
 				break;
 			case'2':
 
 				system("cls");
-				zapisi_clana();
+				zapisi_clana("clanovi.bin");
 				do{
 					choice_two = _getch();
 				}while(choice_two != 'z');
-				//otvaranje_clanovi();
-				//dodaj_clan(&membHead);
-				/*fread(&brojClanova, sizeof(int), 1, fp);
-				fseek(fp, 0, SEEK_SET);
-				brojClanova++;
-				fwrite(&brojClanova, sizeof(int), 1, fp);
-
-				fclose(fp);*/
 				break;
 			case '3':
-				system("cls");
-				popisClanova = ucitaj_podatke("clanoviDrugi.bin");
-				ispis_clanova(popisClanova);
-				do{
-					choice_two = _getch();
-				}while(choice_two != 'z');
 				break;
 
 			case 27:
-				exit(-1);
+				break;
 			}
 			}while(choice_two != '0');
 			break;
@@ -128,27 +109,18 @@ void izbornik() {
 
 }
 
-
-
-void ispis_liste_clanova(MEMBER* h) {
-	MEMBER* temp = h;
-	while (temp != NULL) {
-
-		printf("ID: %d\tIme: %s\tPrezime: %s", temp->id, temp->ime, temp->prezime);
-		h = h->next;
-	}
-	printf("\n");
-}
-
 void provjera_Kreiranje_file(const char* ime) {
 	fp = fopen(ime, "rb+");
 	if (fp == NULL) {
+		zad_id_Clanova = 1;
 		fp = fopen(ime, "ab+");
+		fwrite(&zad_id_Clanova, sizeof(int), 1, fp);
 		if (fp == NULL) {
 			perror("Kreiranje nemoguce");
 			exit(-1);
 		}
 	}
+	else(fread(&zad_id_Clanova, sizeof(int), 1, fp));
 
 }
 void init_list(LISTA* lista){
@@ -197,27 +169,22 @@ MEMBER* nadi_clana(LISTA* dll, int id){
 }
 
 void ispis_clanova(LISTA* lista){
+	int br=1;
 	MEMBER* pointer = lista->glava;
 	printf("\n");
-	if(pointer !=NULL){
-		printf("%d ", pointer->id);
+	if (lista->glava == NULL) {
+		return;
 	}
+	printf("\tID\t      IME\t    PREZIME\n");
 	while(pointer->next != NULL){
-		printf("%d	", pointer->id);
+		
+		printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->prezime);
 		pointer = pointer->next;
+		br++;
 	}
+	printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->prezime);
 }
-void ispis_clanova_mem(MEMBER* cvor){
-	MEMBER* pointer = cvor;
-	printf("\n");
-	if(pointer !=NULL){
-		printf("%d ", pointer->id);
-	}
-	while(pointer->next != NULL){
-		printf("%d	", pointer->id);
-		pointer = pointer->next;
-	}
-}
+
 LISTA* ucitaj_podatke(char* ime_datoteke){
 	LISTA* lista = (LISTA*)calloc(1, sizeof(LISTA));
 	provjera_Kreiranje_file(ime_datoteke);
@@ -226,28 +193,35 @@ LISTA* ucitaj_podatke(char* ime_datoteke){
 		dodaj_clan(lista, clan);
 		clan =(MEMBER*)calloc(1, sizeof(MEMBER));
 	}
+	fclose(fp);
 	return lista;
 }
 
-MEMBER* zapisi_clana(void) {
+MEMBER* zapisi_clana(char * ime_datoteke) {
 	MEMBER* headNode = (MEMBER*)calloc(1, sizeof(MEMBER));
+	headNode->id = zad_id_Clanova;
+	zad_id_Clanova++;
+	fp = fopen(ime_datoteke, "ab+");
+		if (fp == NULL) {
+		perror("File error");
+		system("pause");
+		exit(-1);
+	}
+	fseek(fp,0,SEEK_SET);
+	fwrite(&zad_id_Clanova, sizeof(int), 1, fp);
 	if (headNode == NULL) {
 		perror("kreiranje liste na pocetku");
 		return NULL;
 	}
 	else {
-		scanf( "%d", &headNode->id);
-		scanf( "%d", &headNode->book);
-		scanf( "%d", &headNode->books);
+		printf("Unesite ime novog korisnika");
 		scanf( "%s", &headNode->ime);
+		printf("Unesite prezime novog korisnika");
 		scanf( "%s", &headNode->prezime);
 	}
-	FILE* pointer = fopen("clanoviDrugi.bin", "ab+");
-	if (pointer == NULL) {
-		perror("File error");
-		system("pause");
-		exit(-1);
-	}
-	fwrite(headNode, sizeof(MEMBER), 1, pointer);
-	fclose(pointer);
+
+	fclose(fp);
+	fp = fopen(ime_datoteke, "ab+");
+	fwrite(headNode, sizeof(MEMBER), 1, fp);
+	fclose(fp);
 }

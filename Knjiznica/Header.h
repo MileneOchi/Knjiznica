@@ -31,21 +31,13 @@ typedef struct Lista {
 }LISTA;
 
 void izbornik();
-MEMBER* zapisi_clana(void);
-MEMBER* dodaj_novu_nodu(MEMBER*);
-void init_list_mem(MEMBER*,MEMBER*);
 void init_list(LISTA*);
 void dodaj_clan(LISTA*, MEMBER*);
-void dodaj_clan_mem(MEMBER*, MEMBER*,MEMBER*);
 void obrisi_clana(LISTA*, int);
 MEMBER* nadi_clana(LISTA*, int);
-//MEMBER* citanje_clan(MEMBER**,MEMBER**,FILE*);
-void ispis_liste_clanova(MEMBER*);
-void provjera_Kreiranje_file(const char*);
-
 void ispis_clanova(LISTA*);
-void ispis_clanova_mem(MEMBER* cvor);
-void otvaranje_clanovi();
-void unos_char(char*);
 LISTA* ucitaj_podatke(char*);
+void otvaranje_clanovi();
+MEMBER* zapisi_clana(char*);
+void provjera_Kreiranje_file(const char*);
 #endif
