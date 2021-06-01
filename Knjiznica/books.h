@@ -30,4 +30,5 @@ KNJIGA* zapisi_knjigu(char*);
 void provjera_Kreiranje_knjige(const char*);
 void ispis_knjiga(LISTA_KNJIGA*);
 LISTA_KNJIGA* ucitaj_podatke_knjiga(char*);
+void obrisi_knjigu(LISTA_KNJIGA*);
 #endif

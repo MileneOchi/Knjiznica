@@ -3,6 +3,7 @@
 #include "izbornik.h"
 void izbornik() {
 	LISTA_CLANOVA* popisClanova;
+	LISTA_KNJIGA* popisKnjiga;
 	char choice;
 	char choice_two;
 
@@ -63,21 +64,44 @@ void izbornik() {
 			} while (choice_two != '0');
 			break;
 		case'2':
-			system("cls");
-			printf("Upravljanje: knjige\n");
-			printf("1.Lista knjiga\n");
-			printf("2.Dodaj knjigu\n");
-			printf("3.Obrisi knjigu\n");
-			printf("4.Uredi knjigu\n");
-			choice_two = _getch();
-			switch (choice_two) {
-			case '1':
+			do{
 				system("cls");
-				break;
-			case'2':
-				system("cls");
-				zapisi_knjigu("knjige.bin");
-			}
+				printf("Upravljanje: knjige\n");
+				printf("1.Lista knjiga\n");
+				printf("2.Dodaj knjigu\n");
+				printf("3.Obrisi knjigu\n");
+				printf("4.Uredi knjigu\n");
+				choice_two = _getch();
+				switch (choice_two) {
+				case '1':
+					system("cls");
+					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
+					if (popisKnjiga == NULL) {
+						printf("Nema knjiga za ispis");
+
+					}
+					ispis_knjiga(popisKnjiga);
+					do {
+						choice_two = _getch();
+					} while (choice_two != 'z');
+					break;
+					break;
+				case'2':
+					system("cls");
+					zapisi_knjigu("knjige.bin");
+
+				case'3':
+					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
+					if (popisKnjiga == NULL) {
+						printf("nema clanova");
+						break;
+					}
+					ispis_knjiga(popisKnjiga);
+					obrisi_knjigu(popisKnjiga);
+					break;
+				}
+			} while (choice_two != '0');
+			
 			break;
 		case '3':
 			system("cls");

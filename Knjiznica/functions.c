@@ -1,10 +1,10 @@
-#define _CRT_SECURE_NO_WARNINGS
 
+#define _CRT_SECURE_NO_WARNINGS
 
 #include "Header.h"
 #include "books.h"
-extern FILE* fp;
-FILE* fp = NULL;
+#include "izbornik.h"
+FILE* fp;
 
 static int zad_id_Clanova;
 
@@ -141,8 +141,16 @@ void ispis_clanova(LISTA_CLANOVA* lista) {
 
 LISTA_CLANOVA* ucitaj_podatke(char* ime_datoteke) {
 	LISTA_CLANOVA* lista = (LISTA_CLANOVA*)calloc(1, sizeof(LISTA_CLANOVA));
+	if (lista == NULL) {
+		perror("kreiranje");
+		return NULL;
+	}
 	provjera_Kreiranje_file(ime_datoteke);
 	CLAN* clan = (CLAN*)calloc(1, sizeof(CLAN));
+	if (clan == NULL) {
+		perror("kreiranje");
+		return NULL;
+	}
 	while (fread(clan, sizeof(CLAN), 1, fp)) {
 		dodaj_clan(lista, clan);
 		clan = (CLAN*)calloc(1, sizeof(CLAN));
@@ -153,6 +161,10 @@ LISTA_CLANOVA* ucitaj_podatke(char* ime_datoteke) {
 
 CLAN* zapisi_clana(char* ime_datoteke) {
 	CLAN* headNode = (CLAN*)calloc(1, sizeof(CLAN));
+	if (headNode == NULL) {
+		perror("kreiranje");
+		return NULL;
+	}
 	provjera_Kreiranje_file(ime_datoteke);
 	zad_id_Clanova++;
 	headNode->id = zad_id_Clanova;

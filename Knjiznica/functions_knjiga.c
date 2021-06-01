@@ -1,5 +1,8 @@
 
+#define _CRT_SECURE_NO_WARNINGS
+#include "izbornik.h"
 #include "books.h"
+FILE* fp=NULL;
 static int zad_id_knjiga = 0;
 
 //KNJIGA* nadi_clana(LISTA_KNJIGA* dll, int id) {
@@ -20,7 +23,7 @@ void ispis_knjiga(LISTA_KNJIGA* lista) {
 	if (lista->glava == NULL) {
 		return;
 	}
-	printf("\tID\t      IME\t    PREZIME\n");
+	printf("\tID\tIME\t\t\t  AUTOR\n");
 	while (pointer->next != NULL) {
 
 		printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->autor_prezime);
@@ -61,13 +64,15 @@ KNJIGA* zapisi_knjigu(char* ime_datoteke) {
 		return NULL;
 	}
 	else {
-		printf("Unesite ime novog korisnika: ");
-		scanf("%s", &headNode->ime);
-		printf("Unesite ime novog korisnika: ");
+		
+		printf("Unesite ime knjige: ");
+		scanf("%[^\n]", &headNode->ime);
+		printf("Unesite ime autora knjige: ");
 		scanf("%s", &headNode->autor_ime);
-		printf("Unesite ime novog korisnika: ");
+		printf("Unesite prezime autora knjige: ");
 		scanf("%s", &headNode->autor_prezime);
-		printf("Unesite prezime novog korisnika: ");
+		
+		printf("Unesite zanr kjige: ");
 		scanf("%s", &headNode->zanr);
 	}
 	fclose(fp);
