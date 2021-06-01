@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <conio.h>
-#include "Header.h"
+#include "izbornik.h"
 
 int main() {
 

@@ -3,18 +3,7 @@
 #define HEADER_H
 #include <stdio.h>
 #include <stdlib.h>
-typedef struct Knjiga {
-	int id;
-	char ime[30];
-	char autor_ime[20];
-	char autor_prezime[30];
-	char zanr[20];
-	int state;
-	int date[10];
-	struct Knjiga* next;
-	struct Knjiga* prev;
-} BOOK;
-
+#include <string.h>
 typedef struct Clan {
 	int id;
 	int book;
@@ -23,22 +12,20 @@ typedef struct Clan {
 	char prezime[30];
 	struct Clan* next;
 	struct Clan* prev;
-} MEMBER;
+} CLAN;
 
 typedef struct Lista {
 	struct Clan* glava;
 	struct Clan* rep;
 }LISTA_CLANOVA;
 
-void izbornik();
+
 void init_list(LISTA_CLANOVA*);
-void dodaj_clan(LISTA_CLANOVA*, MEMBER*);
+void dodaj_clan(LISTA_CLANOVA*, CLAN*);
 void obrisi_clana(LISTA_CLANOVA*);
-MEMBER* nadi_clana(LISTA_CLANOVA*, int);
+CLAN* nadi_clana(LISTA_CLANOVA*, int);
 void ispis_clanova(LISTA_CLANOVA*);
 LISTA_CLANOVA* ucitaj_podatke(char*);
-MEMBER* zapisi_clana(char*);
-void provjera_Kreiranje_file(const char*);
-BOOK* zapisi_knjigu(char*);
-void provjera_Kreiranje_knjige(const char*);
+CLAN* zapisi_clana(char*);
+
 #endif

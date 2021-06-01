@@ -1,30 +1,21 @@
 
-#include "Header.h"
-BOOK* nadi_clana(LISTA_KNJIGA* dll, int id) {
-	BOOK* clan = dll->glava;
-	while (clan->id != id) {
-		if (clan->next == NULL) {
-			return NULL;
-		}
-		clan = clan->next;
-	}
-	return clan;
-}
+#include "books.h"
+static int zad_id_knjiga = 0;
 
-void ispis_clanova(MEMBER* nadi_clana(LISTA_KNJIGA* dll, int id) {
-	MEMBER* clan = dll->glava;
-	while (clan->id != id) {
-		if (clan->next == NULL) {
-			return NULL;
-		}
-		clan = clan->next;
-	}
-	return clan;
-}
+//KNJIGA* nadi_clana(LISTA_KNJIGA* dll, int id) {
+//	KNJIGA* clan = dll->glava;
+//	while (clan->id != id) {
+//		if (clan->next == NULL) {
+//			return NULL;
+//		}
+//		clan = clan->next;
+//	}
+//	return clan;
+//}
 
-void ispis_clanova(LISTA_KNJIGA* lista) {
+void ispis_knjiga(LISTA_KNJIGA* lista) {
 	int br = 1;
-	MEMBER* pointer = lista->glava;
+	KNJIGA* pointer = lista->glava;
 	printf("\n");
 	if (lista->glava == NULL) {
 		return;
@@ -32,86 +23,27 @@ void ispis_clanova(LISTA_KNJIGA* lista) {
 	printf("\tID\t      IME\t    PREZIME\n");
 	while (pointer->next != NULL) {
 
-		printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->prezime);
+		printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->autor_prezime);
 		pointer = pointer->next;
 		br++;
 	}
-	printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->prezime);
+	printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->autor_prezime);
 }
 
-LISTA_KNJIGA* ucitaj_podatke(char* ime_datoteke) {
+LISTA_KNJIGA* ucitaj_podatke_knjiga(char* ime_datoteke) {
 	LISTA_KNJIGA* lista = (LISTA_KNJIGA*)calloc(1, sizeof(LISTA_KNJIGA));
 	provjera_Kreiranje_file(ime_datoteke);
-	MEMBER* clan = (MEMBER*)calloc(1, sizeof(MEMBER));
-	while (fread(clan, sizeof(MEMBER), 1, fp)) {
-		dodaj_clan(lista, clan);
-		clan = (MEMBER*)calloc(1, sizeof(MEMBER));
+	KNJIGA* clan = (KNJIGA*)calloc(1, sizeof(KNJIGA));
+	while (fread(clan, sizeof(KNJIGA), 1, fp)) {
+		dodaj_knjigu(lista, clan);
+		clan = (KNJIGA*)calloc(1, sizeof(KNJIGA));
 	}
 	fclose(fp);
 	return lista;
 }
 
-MEMBER* zapisi_clana(char* ime_datoteke) {
-	MEMBER* headNode = (MEMBER*)calloc(1, sizeof(MEMBER));
-	provjera_Kreiranje_file(ime_datoteke);
-	zad_id_Clanova++;
-	headNode->id = zad_id_Clanova;
-	printf("(%d)\n", zad_id_Clanova);
-	//fp = fopen(ime_datoteke, "ab+");
-	if (fp == NULL) {
-		perror("File error");
-		system("pause");
-		exit(-1);
-	}
-	fseek(fp, 0, SEEK_SET);
-	fwrite(&zad_id_Clanova, sizeof(int), 1, fp);
-	if (headNode == NULL) {
-		perror("kreiranje liste na pocetku");
-		return NULL;
-	}
-	else {
-		printf("Unesite ime novog korisnika: ");
-		scanf("%s", &headNode->ime);
-		printf("Unesite prezime novog korisnika: ");
-		scanf("%s", &headNode->prezime);
-	}
-	fclose(fp);
-	fp = fopen(ime_datoteke, "ab+");
-	fwrite(headNode, sizeof(BOOK), 1, fp);
-	//fprintf(fp, "%s", "\n");
-	fclose(fp);
-}* lista) {
-	int br = 1;
-	MEMBER* pointer = lista->glava;
-	printf("\n");
-	if (lista->glava == NULL) {
-		return;
-	}
-	printf("\tID\t      IME\t    PREZIME\n");
-	while (pointer->next != NULL) {
-
-		printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->prezime);
-		pointer = pointer->next;
-		br++;
-	}
-	printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->prezime);
-}
-
-LISTA_CLANOVA* ucitaj_podatke(char* ime_datoteke) {
-	LISTA_CLANOVA* lista = (LISTA_CLANOVA*)calloc(1, sizeof(LISTA_CLANOVA));
-	provjera_Kreiranje_file(ime_datoteke);
-	BOOK* clan = (BOOK*)calloc(1, sizeof(BOOK));
-	while (fread(clan, sizeof(BOOK), 1, fp)) {
-		dodaj_clan(lista, clan);
-		clan = (BOOK*)calloc(1, sizeof(BOOK));
-	}
-	fclose(fp);
-	return lista;
-}
-
-
-BOOK* zapisi_knjigu(char* ime_datoteke) {
-	BOOK* headNode = (BOOK*)calloc(1, sizeof(BOOK));
+KNJIGA* zapisi_knjigu(char* ime_datoteke) {
+	KNJIGA* headNode = (KNJIGA*)calloc(1, sizeof(KNJIGA));
 	provjera_Kreiranje_knjige(ime_datoteke);
 	zad_id_knjiga++;
 	headNode->id = zad_id_knjiga;
@@ -140,7 +72,7 @@ BOOK* zapisi_knjigu(char* ime_datoteke) {
 	}
 	fclose(fp);
 	fp = fopen(ime_datoteke, "ab+");
-	fwrite(headNode, sizeof(BOOK), 1, fp);
+	fwrite(headNode, sizeof(KNJIGA), 1, fp);
 	fclose(fp);
 }
 
@@ -161,4 +93,88 @@ void provjera_Kreiranje_knjige(const char* ime) {
 	else {
 		fread(&zad_id_knjiga, sizeof(int), 1, fp);
 	}
+}
+
+void init_list_knjiga(LISTA_KNJIGA* lista) {
+	lista->glava->next = lista->rep;
+	lista->rep->prev = lista->glava;
+}
+
+void dodaj_knjigu(LISTA_KNJIGA* dll, KNJIGA* temp) {
+	if (dll->glava == NULL) {
+		dll->glava = temp;
+		return;
+	}
+	else if (dll->glava != NULL && dll->rep == NULL) {
+		dll->rep = temp;
+		init_list_knjiga(dll);
+		return;
+	}
+	else {
+		temp->prev = dll->rep;
+		dll->rep->next = temp;
+		dll->rep = temp;
+		return;
+	}
+}
+void obrisi_knjigu(LISTA_KNJIGA* dll) {
+	FILE* fp;
+	FILE* fp_temp;
+	KNJIGA temp_dat;
+	int foundDat = 0;
+	int id_clan;
+	fp = fopen("clanovi.bin", "rb");
+	if (!fp) {
+		printf("nemoguce otvoriti");
+		return NULL;
+	}
+	fp_temp = fopen("tmp.bin", "wb");
+	if (!fp_temp) {
+		printf("nemoguce otvoriti temp file u brisanju");
+		return NULL;
+	}
+	printf("Unesite ID clana kojeg zelite obrisati: ");
+	scanf("%d", &id_clan);
+	KNJIGA* temp;
+	temp = dll->glava;
+	if (temp->id == id_clan){
+		temp->next->prev = NULL;
+		dll->glava = dll->glava->next;
+		free(temp);
+	}else if (dll->rep->id == id_clan){
+		KNJIGA* obrisat = dll->rep;
+		dll->rep->prev->next = NULL;
+		dll->rep = dll->rep->prev;
+		free(obrisat);
+	}
+	else {
+		while (temp->id != id_clan)
+			temp = temp->next;
+		temp->next->prev = temp->prev;
+		temp->prev->next= temp->next;
+		free(temp);
+	}
+	fwrite(&zad_id_knjiga, sizeof(int), 1, fp_temp);
+	int fill;
+	fread(&fill, sizeof(int), 1, fp);
+	while (fread(&temp_dat, sizeof (KNJIGA), 1, fp) != NULL) {
+		if (temp_dat.id==id_clan) {
+			printf("Pronadjen i obrisan iz datoteke.\n\n");
+			foundDat = 1;
+		}
+		else {
+			fwrite(&temp_dat, sizeof(KNJIGA), 1, fp_temp);
+		}
+	}
+	if (!foundDat) {
+		printf("Nije pronaden nijedan clan s ID: %d u datoteci.\n\n", id_clan);
+	}
+
+	fclose(fp);
+	fclose(fp_temp);
+
+	remove("knjige.bin");
+	rename("tmp.bin", "knjige.bin");
+
+
 }

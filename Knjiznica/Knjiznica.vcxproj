@@ -141,10 +141,13 @@
   <ItemGroup>
     <ClCompile Include="functions.c" />
     <ClCompile Include="functions_knjiga.c" />
+    <ClCompile Include="izbornik.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="books.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="izbornik.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
