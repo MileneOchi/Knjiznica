@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="functions.c" />
+    <ClCompile Include="functions_knjiga.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>

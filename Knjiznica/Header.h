@@ -28,16 +28,17 @@ typedef struct Clan {
 typedef struct Lista {
 	struct Clan* glava;
 	struct Clan* rep;
-}LISTA;
+}LISTA_CLANOVA;
 
 void izbornik();
-void init_list(LISTA*);
-void dodaj_clan(LISTA*, MEMBER*);
-void obrisi_clana(LISTA*, int);
-MEMBER* nadi_clana(LISTA*, int);
-void ispis_clanova(LISTA*);
-LISTA* ucitaj_podatke(char*);
-void otvaranje_clanovi();
+void init_list(LISTA_CLANOVA*);
+void dodaj_clan(LISTA_CLANOVA*, MEMBER*);
+void obrisi_clana(LISTA_CLANOVA*);
+MEMBER* nadi_clana(LISTA_CLANOVA*, int);
+void ispis_clanova(LISTA_CLANOVA*);
+LISTA_CLANOVA* ucitaj_podatke(char*);
 MEMBER* zapisi_clana(char*);
 void provjera_Kreiranje_file(const char*);
+BOOK* zapisi_knjigu(char*);
+void provjera_Kreiranje_knjige(const char*);
 #endif
