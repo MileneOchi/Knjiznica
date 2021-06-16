@@ -9,6 +9,8 @@ FILE* fp;
 static int zad_id_Clanova;
 
 
+struct clan* first = NULL;
+struct clan* last = NULL;
 
 
 void provjera_Kreiranje_file(const char* ime) {
@@ -194,3 +196,77 @@ CLAN* zapisi_clana(char* ime_datoteke) {
 	fclose(fp);
 }
 
+/* Merge two sorted lists. p1 and p2 are != NULL */
+CLAN* merge(struct CLAN* p1, struct CLAN* p2) {
+	struct CLAN* head, ** pp;
+	pp = &head;
+	for (;;) {
+		if (strcmp(p1->Nachname, p2->Nachname) <= 0) {
+			*pp = p1;
+			pp = &p1->next;
+			p1 = p1->next;
+			if (p1 == NULL) {
+				*pp = p2;
+				break;
+			}
+		}
+		else {
+			*pp = p2;
+			pp = &p2->next;
+			p2 = p2->next;
+			if (p2 == NULL) {
+				*pp = p1;
+				break;
+			}
+		}
+	}
+	return head;
+}
+
+void sort(void) {
+	struct CLAN* p1, * p2;
+	/* sort the list as a singly linked list */
+	first = msort(first);
+	/* reconstruct the backlinks */
+	p1 = NULL;
+	for (p2 = first; p2; p2 = p2->next) {
+		p2->last = p1;
+		p1 = p2;
+	}
+	last = p1;
+}
+
+/* bottom-up merge sort with sublist array */
+CLAN* msort(struct CLAN* head) {
+	struct CLAN* array[32] = { NULL };
+	int i;
+
+	/* handle trivial lists */
+	if (head == NULL || head->next == NULL)
+		return head;
+
+	i = 0;  /* avoid warning */
+	p1 = head;
+	/* merge nodes into pending lists of increasing lengths */
+	while (head != NULL) {
+		struct CLAN* next = head->next;
+		head->next = NULL;
+		for (i = 0; i < 32 && array[i] != NULL; i++) {
+			head = merge(array[i], head);
+			array[i] = NULL;
+		}
+		/* do not go past end of array */
+		if (i == 32)
+			i--;
+		array[i] = head;
+		head = next;
+	}
+	/* merge pending lists into single list:
+	 * the last element stored into the array is at offset i and
+	 * all entries before it are NULL pointers. */
+	for (head = array[i++]; i < 32; i++) {
+		if (array[i] != NULL)
+			head = merge(array[i], head);
+	}
+	return head;
+}

@@ -60,6 +60,16 @@ void izbornik() {
 
 					break;
 
+				case '4':
+					popisClanova = ucitaj_podatke("clanovi.bin");
+					if (popisClanova == NULL) {
+						printf("nema clanova");
+						break;
+					}
+					popisClanova);
+
+
+					break;
 				case 27:
 					break;
 				}
