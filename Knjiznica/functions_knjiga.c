@@ -35,8 +35,16 @@ void ispis_knjiga(LISTA_KNJIGA* lista) {
 
 LISTA_KNJIGA* ucitaj_podatke_knjiga(char* ime_datoteke) {
 	LISTA_KNJIGA* lista = (LISTA_KNJIGA*)calloc(1, sizeof(LISTA_KNJIGA));
+	if (lista == NULL) {
+		perror("kreiranje");
+		return NULL;
+	}
 	provjera_Kreiranje_file(ime_datoteke);
 	KNJIGA* clan = (KNJIGA*)calloc(1, sizeof(KNJIGA));
+	if (clan == NULL) {
+		perror("kreiranje");
+		return NULL;
+	}
 	while (fread(clan, sizeof(KNJIGA), 1, fp)) {
 		dodaj_knjigu(lista, clan);
 		clan = (KNJIGA*)calloc(1, sizeof(KNJIGA));
@@ -47,6 +55,10 @@ LISTA_KNJIGA* ucitaj_podatke_knjiga(char* ime_datoteke) {
 
 KNJIGA* zapisi_knjigu(char* ime_datoteke) {
 	KNJIGA* headNode = (KNJIGA*)calloc(1, sizeof(KNJIGA));
+	if (headNode == NULL) {
+		perror("kreiranje");
+		return NULL;
+	}
 	provjera_Kreiranje_knjige(ime_datoteke);
 	zad_id_knjiga++;
 	headNode->id = zad_id_knjiga;
@@ -66,6 +78,7 @@ KNJIGA* zapisi_knjigu(char* ime_datoteke) {
 	else {
 		
 		printf("Unesite ime knjige: ");
+		getchar();
 		scanf("%[^\n]", &headNode->ime);
 		printf("Unesite ime autora knjige: ");
 		scanf("%s", &headNode->autor_ime);
@@ -74,6 +87,7 @@ KNJIGA* zapisi_knjigu(char* ime_datoteke) {
 		
 		printf("Unesite zanr kjige: ");
 		scanf("%s", &headNode->zanr);
+		getchar();
 	}
 	fclose(fp);
 	fp = fopen(ime_datoteke, "ab+");
@@ -127,33 +141,33 @@ void obrisi_knjigu(LISTA_KNJIGA* dll) {
 	FILE* fp_temp;
 	KNJIGA temp_dat;
 	int foundDat = 0;
-	int id_clan;
-	fp = fopen("clanovi.bin", "rb");
+	int id_knjige;
+	fp = fopen("knjige.bin", "rb");
 	if (!fp) {
 		printf("nemoguce otvoriti");
 		return NULL;
 	}
-	fp_temp = fopen("tmp.bin", "wb");
+	fp_temp = fopen("tmp_knj.bin", "wb");
 	if (!fp_temp) {
 		printf("nemoguce otvoriti temp file u brisanju");
 		return NULL;
 	}
 	printf("Unesite ID clana kojeg zelite obrisati: ");
-	scanf("%d", &id_clan);
+	scanf("%d", &id_knjige);
 	KNJIGA* temp;
 	temp = dll->glava;
-	if (temp->id == id_clan){
+	if (temp->id == id_knjige){
 		temp->next->prev = NULL;
 		dll->glava = dll->glava->next;
 		free(temp);
-	}else if (dll->rep->id == id_clan){
+	}else if (dll->rep->id == id_knjige){
 		KNJIGA* obrisat = dll->rep;
 		dll->rep->prev->next = NULL;
 		dll->rep = dll->rep->prev;
 		free(obrisat);
 	}
 	else {
-		while (temp->id != id_clan)
+		while (temp->id != id_knjige)
 			temp = temp->next;
 		temp->next->prev = temp->prev;
 		temp->prev->next= temp->next;
@@ -163,7 +177,7 @@ void obrisi_knjigu(LISTA_KNJIGA* dll) {
 	int fill;
 	fread(&fill, sizeof(int), 1, fp);
 	while (fread(&temp_dat, sizeof (KNJIGA), 1, fp) != NULL) {
-		if (temp_dat.id==id_clan) {
+		if (temp_dat.id==id_knjige) {
 			printf("Pronadjen i obrisan iz datoteke.\n\n");
 			foundDat = 1;
 		}
@@ -172,14 +186,14 @@ void obrisi_knjigu(LISTA_KNJIGA* dll) {
 		}
 	}
 	if (!foundDat) {
-		printf("Nije pronaden nijedan clan s ID: %d u datoteci.\n\n", id_clan);
+		printf("Nije pronaden nijedna knjiga s ID: %d u datoteci.\n\n", id_knjige);
 	}
 
 	fclose(fp);
 	fclose(fp_temp);
 
 	remove("knjige.bin");
-	rename("tmp.bin", "knjige.bin");
+	rename("tmp_knj.bin", "knjige.bin");
 
 
 }

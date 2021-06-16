@@ -25,6 +25,7 @@ void izbornik() {
 				printf("2.Dodaj clana\n");
 				printf("3.Obrisi clana\n");
 				printf("4.Uredi clana\n");
+				printf("5.Sortiranje clanova\n");
 				choice_two = _getch();
 				switch (choice_two) {
 				case '1':
@@ -56,6 +57,7 @@ void izbornik() {
 					}
 					ispis_clanova(popisClanova);
 					obrisi_clana(popisClanova);
+
 					break;
 
 				case 27:
@@ -76,7 +78,7 @@ void izbornik() {
 				case '1':
 					system("cls");
 					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
-					if (popisKnjiga == NULL) {
+					if (popisKnjiga->glava == NULL&&popisKnjiga->rep==NULL) {
 						printf("Nema knjiga za ispis");
 
 					}
@@ -85,11 +87,10 @@ void izbornik() {
 						choice_two = _getch();
 					} while (choice_two != 'z');
 					break;
-					break;
 				case'2':
 					system("cls");
 					zapisi_knjigu("knjige.bin");
-
+					break;
 				case'3':
 					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
 					if (popisKnjiga == NULL) {
@@ -98,6 +99,9 @@ void izbornik() {
 					}
 					ispis_knjiga(popisKnjiga);
 					obrisi_knjigu(popisKnjiga);
+					do {
+						choice_two = _getch();
+					} while (choice_two != 'z');
 					break;
 				}
 			} while (choice_two != '0');
