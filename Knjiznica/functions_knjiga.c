@@ -259,3 +259,46 @@ void FrontBackSplitKnjiga(KNJIGA* source, KNJIGA** frontRef, KNJIGA** backRef)
 	
 	slow->next = NULL;
 }
+
+void uredi_knjigu(KNJIGA*head) {
+	if (head->next == NULL && head->prev == NULL) {
+		return NULL;
+	}
+	char choice;
+	printf("\tID\t\tIME\t\tAUTOR\t   ZANR\n");
+	printf("\t%d\t%10s\t%10s\t%10s\n\n", head->id, head->ime, head->autor_prezime,head->zanr);
+	do {
+		
+		printf("Koju varijablu zelite urediti\n");
+		printf("1.\tID\n");
+		printf("2.\tIME KNJIGE\n");
+		printf("3.\tIME AUTORA\n");
+		printf("4.\tPREZIME AUTORA\n");
+		printf("5.\tZANR\n");
+		choice = _getch();
+		switch (choice) {
+		case'1':
+			getchar();
+			printf("Unesi novi ID:");
+			scanf("%d", &head->id);
+
+			break;
+		case'2':
+			getchar();
+			printf("Unesi novo ime knjige");
+			scanf("%[^\n]", &head->ime);
+			return;
+		case'3':
+			getchar();
+			printf("Unesi novo ime autora");
+			scanf("%s", &head->autor_ime);
+			break;
+		case'4':
+			getchar();
+			printf("Unesi novo prezime autora knjige: ");
+			scanf("%s", &head->autor_prezime);
+			break;
+		}
+	} while (choice != 'z');
+	
+}

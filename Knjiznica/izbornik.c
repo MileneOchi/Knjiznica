@@ -6,6 +6,7 @@ void izbornik() {
 	LISTA_KNJIGA* popisKnjiga;
 	char choice;
 	char choice_two;
+	int choice_id;
 
 	do {
 		system("cls");
@@ -124,8 +125,11 @@ void izbornik() {
 					}
 					ispis_knjiga(popisKnjiga);
 					printf("\nIzaberite ID knjige koje zelite urediti:");
-					scanf("");
-					nadi_knjigu()
+					
+					scanf("%d", &choice_id);
+					uredi_knjigu(nadi_knjigu(popisKnjiga, choice_id));
+					ispis_knjiga(popisKnjiga);
+
 					do {
 						choice_two = _getch();
 					} while (choice_two != 'z');
