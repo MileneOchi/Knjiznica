@@ -4,13 +4,15 @@
 #include "books.h"
 FILE* fp=NULL;
 static int zad_id_knjiga = 0;
-
+int br_knj = 0;
 KNJIGA* nadi_knjigu(LISTA_KNJIGA* dll, int id) {
+	br_knj = 0;
 	KNJIGA* clan = dll->glava;
 	while (clan->id != id) {
 		if (clan->next == NULL) {
 			return NULL;
 		}
+		br_knj++;
 		clan = clan->next;
 	}
 	return clan;
@@ -300,5 +302,11 @@ void uredi_knjigu(KNJIGA*head) {
 			break;
 		}
 	} while (choice != 'z');
+	
+}
+
+void zapis_edita_knjige(LISTA_KNJIGA*head, int n,char*ime){
+	provjera_Kreiranje_knjige(ime);
+
 	
 }

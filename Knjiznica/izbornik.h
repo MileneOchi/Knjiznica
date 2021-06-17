@@ -7,6 +7,7 @@
 #include <conio.h>
 
 extern FILE* fp;
+extern int br_knj;
 void izbornik();
 
 #endif

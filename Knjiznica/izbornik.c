@@ -129,7 +129,7 @@ void izbornik() {
 					scanf("%d", &choice_id);
 					uredi_knjigu(nadi_knjigu(popisKnjiga, choice_id));
 					ispis_knjiga(popisKnjiga);
-
+					zapis_edita_knjige(popisKnjiga, br_knj,"knjige.bin");
 					do {
 						choice_two = _getch();
 					} while (choice_two != 'z');
