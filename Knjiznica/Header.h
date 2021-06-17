@@ -27,5 +27,7 @@ CLAN* nadi_clana(LISTA_CLANOVA*, int);
 void ispis_clanova(LISTA_CLANOVA*);
 LISTA_CLANOVA* ucitaj_podatke(char*);
 CLAN* zapisi_clana(char*);
-void sort(LISTA_CLANOVA*);
+void MergeSort(LISTA_CLANOVA*);
+CLAN* SortedMerge(CLAN*, CLAN*);
+void FrontBackSplit(CLAN*);
 #endif

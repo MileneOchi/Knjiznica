@@ -53,22 +53,23 @@ void izbornik() {
 					popisClanova = ucitaj_podatke("clanovi.bin");
 					if (popisClanova == NULL) {
 						printf("nema clanova");
-						break;
 					}
 					ispis_clanova(popisClanova);
 					obrisi_clana(popisClanova);
 
 					break;
 
-				case '4':
+				case '5':
 					popisClanova = ucitaj_podatke("clanovi.bin");
 					if (popisClanova == NULL) {
 						printf("nema clanova");
 						break;
 					}
-					popisClanova);
-
-
+					MergeSort(popisClanova);
+					ispis_clanova(popisClanova);
+					do {
+						choice_two = _getch();
+					} while (choice_two != 'z');
 					break;
 				case 27:
 					break;
@@ -83,6 +84,8 @@ void izbornik() {
 				printf("2.Dodaj knjigu\n");
 				printf("3.Obrisi knjigu\n");
 				printf("4.Uredi knjigu\n");
+				printf("5.Sortiranje knjiga\n");
+
 				choice_two = _getch();
 				switch (choice_two) {
 				case '1':
@@ -109,6 +112,33 @@ void izbornik() {
 					}
 					ispis_knjiga(popisKnjiga);
 					obrisi_knjigu(popisKnjiga);
+					do {
+						choice_two = _getch();
+					} while (choice_two != 'z');
+					break;
+				case'4':
+					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
+					if (popisKnjiga == NULL) {
+						printf("nema clanova");
+						break;
+					}
+					ispis_knjiga(popisKnjiga);
+					printf("\nIzaberite ID knjige koje zelite urediti:");
+					scanf("");
+					nadi_knjigu()
+					do {
+						choice_two = _getch();
+					} while (choice_two != 'z');
+					break;
+
+				case '5':
+					popisKnjiga= ucitaj_podatke_knjiga("knjige.bin");
+					if (popisKnjiga == NULL) {
+						printf("nema clanova");
+						break;
+					}
+					MergeSortKnjiga(&(popisKnjiga->glava));
+					ispis_knjiga(popisKnjiga);
 					do {
 						choice_two = _getch();
 					} while (choice_two != 'z');

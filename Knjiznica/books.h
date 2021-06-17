@@ -5,7 +5,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 typedef struct Knjiga {
 	int id;
 	char ime[30];
@@ -31,4 +31,8 @@ void provjera_Kreiranje_knjige(const char*);
 void ispis_knjiga(LISTA_KNJIGA*);
 LISTA_KNJIGA* ucitaj_podatke_knjiga(char*);
 void obrisi_knjigu(LISTA_KNJIGA*);
+void MergeSortKnjiga(KNJIGA**);
+KNJIGA* SortedMergeKnjiga(KNJIGA*, KNJIGA*);
+void FrontBackSplitKnjiga(KNJIGA*, KNJIGA**, KNJIGA**);
+KNJIGA* nadi_knjigu(LISTA_KNJIGA*, int);
 #endif

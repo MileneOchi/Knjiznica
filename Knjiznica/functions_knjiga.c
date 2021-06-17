@@ -5,16 +5,16 @@
 FILE* fp=NULL;
 static int zad_id_knjiga = 0;
 
-//KNJIGA* nadi_clana(LISTA_KNJIGA* dll, int id) {
-//	KNJIGA* clan = dll->glava;
-//	while (clan->id != id) {
-//		if (clan->next == NULL) {
-//			return NULL;
-//		}
-//		clan = clan->next;
-//	}
-//	return clan;
-//}
+KNJIGA* nadi_knjigu(LISTA_KNJIGA* dll, int id) {
+	KNJIGA* clan = dll->glava;
+	while (clan->id != id) {
+		if (clan->next == NULL) {
+			return NULL;
+		}
+		clan = clan->next;
+	}
+	return clan;
+}
 
 void ispis_knjiga(LISTA_KNJIGA* lista) {
 	int br = 1;
@@ -196,4 +196,66 @@ void obrisi_knjigu(LISTA_KNJIGA* dll) {
 	rename("tmp_knj.bin", "knjige.bin");
 
 
+}
+
+
+void MergeSortKnjiga(KNJIGA** listaClanova) {
+	KNJIGA* head = *listaClanova;
+	KNJIGA* a;
+	KNJIGA* b;
+	if ((head == NULL) || (head->next == NULL)) {
+		return;
+	}
+
+	FrontBackSplitKnjiga(head, &a, &b);
+
+	MergeSortKnjiga(&a);
+	MergeSortKnjiga(&b);
+
+	*listaClanova = SortedMergeKnjiga(a, b);
+}
+
+KNJIGA* SortedMergeKnjiga(KNJIGA* a, KNJIGA* b)
+{
+	KNJIGA* result = NULL;
+
+	if (a == NULL)
+		return (b);
+	else if (b == NULL)
+		return (a);
+	if (strcmp(a->ime, b->ime) == -1) {
+		result = a;
+		result->next = SortedMergeKnjiga(a->next, b);
+		result->next->prev = result;
+		result->prev = NULL;
+	}
+	else {
+		result = b;
+		result->next = SortedMergeKnjiga(a, b->next);
+		result->next->prev = result;
+		result->prev = NULL;
+	}
+	return (result);
+}
+
+void FrontBackSplitKnjiga(KNJIGA* source, KNJIGA** frontRef, KNJIGA** backRef)
+{
+	KNJIGA* fast;
+	KNJIGA* slow;
+	slow = source;
+	fast = source->next;
+
+	while (fast != NULL) {
+		fast = fast->next;
+		if (fast != NULL) {
+			slow = slow->next;
+			fast = fast->next;
+		}
+	}
+
+	*frontRef = source;
+	slow->next->prev = NULL;
+	*backRef = slow->next;
+	
+	slow->next = NULL;
 }
