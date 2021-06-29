@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "books.h"
 typedef struct Clan {
 	int id;
 	int book;
@@ -32,4 +33,5 @@ CLAN* SortedMerge(CLAN*, CLAN*);
 void FrontBackSplit(CLAN*,CLAN**, CLAN**);
 void uredi_clana(CLAN*);
 void zapis_edita_clana(LISTA_CLANOVA*);
+void posudba(CLAN*,KNJIGA*);
 #endif

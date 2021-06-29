@@ -13,7 +13,8 @@ typedef struct Knjiga {
 	char autor_prezime[30];
 	char zanr[20];
 	int state;
-	int date[10];
+	int id_clana;
+	int date;
 	struct Knjiga* next;
 	struct Knjiga* prev;
 } KNJIGA;

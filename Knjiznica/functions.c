@@ -272,7 +272,6 @@ void uredi_clana(CLAN* head) {
 			getchar();
 			printf("Unesi novi ID: ");
 			scanf("%d", &head->id);
-			zapis_edita_clana(head);
 			break;
 		case'2':
 			getchar();
@@ -321,4 +320,15 @@ void zapis_edita_clana(LISTA_CLANOVA* head) {
 	}
 
 	rename("tmp_cln.bin", "clanovi.bin");
+}
+
+void posudba(CLAN* clan,KNJIGA*knjiga) {
+	knjiga->id_clana = clan->id;
+	knjiga->state = 1;
+	time_t vrijeme = time(NULL);
+	struct tm datum = *localtime(&vrijeme);
+	knjiga->date = datum.tm_yday;
+	clan->book+=1;
+	clan->books[clan->book] = knjiga->id;
+	printf()
 }

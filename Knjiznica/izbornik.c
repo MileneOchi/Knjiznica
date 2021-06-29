@@ -7,7 +7,9 @@ void izbornik() {
 	char choice;
 	char choice_two;
 	int choice_id;
-
+	int choice_id_knjiga;
+	CLAN* check = NULL;
+	KNJIGA* check_knj= NULL;
 	do {
 		system("cls");
 		printf("            GLAVNI IZBORNIK           \n");
@@ -15,6 +17,8 @@ void izbornik() {
 		printf("2. Upravljanje: knjige\n");
 		printf("3. Pretraga clan\n");
 		printf("4. Pretraga knjiga\n");
+		printf("5. Posudba knjige\n");
+		printf("Pritisnite ESCAPE za izlazak");
 		printf("");
 		choice = _getch();
 		switch (choice) {
@@ -27,6 +31,7 @@ void izbornik() {
 				printf("3.Obrisi clana\n");
 				printf("4.Uredi clana\n");
 				printf("5.Sortiranje clanova\n");
+				printf("\nPritisnite backspace za povratak");
 				choice_two = _getch();
 				switch (choice_two) {
 				case '1':
@@ -37,6 +42,7 @@ void izbornik() {
 						break;
 					}
 					ispis_clanova(popisClanova);
+					printf("Pritisnite backspace za povratak");
 					do {
 						choice_two = _getch();
 					} while (choice_two != 8);
@@ -45,6 +51,7 @@ void izbornik() {
 
 					system("cls");
 					zapisi_clana("clanovi.bin");
+					printf("Pritisnite backspace za povratak");
 					do {
 						choice_two = _getch();
 					} while (choice_two != 8);
@@ -57,6 +64,7 @@ void izbornik() {
 					}
 					ispis_clanova(popisClanova);
 					obrisi_clana(popisClanova);
+					printf("Pritisnite backspace za povratak");
 
 					do {
 						choice_two = _getch();
@@ -87,6 +95,7 @@ void izbornik() {
 					}
 					MergeSort(&(popisClanova->glava));
 					ispis_clanova(popisClanova);
+					printf("Pritisnite backspace za povratak");
 					do {
 						choice_two = _getch();
 					} while (choice_two != 8);
@@ -106,6 +115,7 @@ void izbornik() {
 				printf("4.Uredi knjigu\n");
 				printf("5.Sortiranje knjiga\n");
 
+				printf("\nPritisnite backspace za povratak...");
 				choice_two = _getch();
 				switch (choice_two) {
 				case '1':
@@ -116,6 +126,7 @@ void izbornik() {
 
 					}
 					ispis_knjiga(popisKnjiga);
+					printf("Pritisnite backspace za povratak");
 					do {
 						choice_two = _getch();
 					} while (choice_two != 8);
@@ -132,6 +143,7 @@ void izbornik() {
 					}
 					ispis_knjiga(popisKnjiga);
 					obrisi_knjigu(popisKnjiga);
+					printf("Pritisnite backspace za povratak");
 					do {
 						choice_two = _getch();
 					} while (choice_two != 8);
@@ -148,7 +160,8 @@ void izbornik() {
 					scanf("%d", &choice_id);
 					uredi_knjigu(nadi_knjigu(popisKnjiga, choice_id));
 					ispis_knjiga(popisKnjiga);
-					zapis_edita_knjige(popisKnjiga, br_knj,"knjige.bin");
+					zapis_edita_knjige(popisKnjiga);
+					printf("Pritisnite backspace za povratak");
 					do {
 						choice_two = _getch();
 					} while (choice_two != 8);
@@ -162,11 +175,13 @@ void izbornik() {
 					}
 					MergeSortKnjiga(&(popisKnjiga->glava));
 					ispis_knjiga(popisKnjiga);
+					printf("Pritisnite backspace za povratak");
 					do {
 						choice_two = _getch();
 					} while (choice_two != 8);
 					break;
 				}
+
 			} while (choice_two != 8);
 			
 			break;
@@ -196,7 +211,45 @@ void izbornik() {
 			}
 			break;
 
+		case'5':
+			system("cls");
 
+			popisClanova = ucitaj_podatke("clanovi.bin");
+			if (popisClanova == NULL) {
+				printf("nema clanova");
+				break;
+			}
+			ispis_clanova(popisClanova);
+
+			
+
+			do {
+				printf("\nUnesite ID-clana koji posuduje knjigu\n");
+				scanf("%d", &choice_id);
+				check = nadi_clana(popisClanova, choice_id);
+			} while (check == NULL);
+
+			popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
+			if (popisKnjiga->glava == NULL && popisKnjiga->rep == NULL) {
+				printf("Nema knjiga za ispis");
+
+			}
+			ispis_knjiga(popisKnjiga);
+			getchar();
+			do {
+				printf("\nUnesite ID-knjige koji posuduje knjigu\n");
+				scanf("%d", &choice_id_knjiga);
+				check_knj= nadi_knjigu(popisKnjiga, choice_id_knjiga);
+			} while (check_knj == NULL);
+			posudba(nadi_clana(popisClanova, choice_id), nadi_knjigu(popisKnjiga, choice_id_knjiga));
+			zapis_edita_clana(popisClanova);
+			zapis_edita_knjige(popisKnjiga);
+
+			printf("\nPritisnite backspace za povratak");
+			do {
+				choice_two = _getch();
+			} while (choice_two != 8);
+			break;
 		case 27:
 			exit(-1);
 		}
