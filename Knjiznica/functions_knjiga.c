@@ -305,15 +305,36 @@ void uredi_knjigu(KNJIGA*head) {
 	
 }
 
-void zapis_edita_knjige(LISTA_KNJIGA*head, int n,char*ime){
+void zapis_edita_knjige(LISTA_KNJIGA*head){
+	provjera_Kreiranje_knjige("knjige.bin");
+	int ret;
 	FILE* fp_temp;
+	KNJIGA* flg = head->glava;
 	fp_temp = fopen("tmp_knj.bin", "wb");
 	if (!fp_temp) {
 		printf("nemoguce otvoriti temp file u brisanju");
 		return NULL;
 	}
+	fwrite(&zad_id_knjiga, sizeof(int), 1, fp_temp);
+	while(flg->next!=NULL){
+		if (fwrite(flg, sizeof(KNJIGA), 1, fp_temp) == -1) {
+			printf("greska pisanja");
+			break;
+		}
+		flg = flg->next;
+	}
+	fwrite(flg, sizeof(KNJIGA), 1, fp_temp);
+	fclose(fp);
 
-	remove("knjige.bin");
+	fclose(fp_temp);
+	ret=remove("knjige.bin");
+
+	if (ret == 0) {
+		printf("File deleted successfully");
+	}
+	else {
+		printf("Error: unable to delete the file");
+	}
+
 	rename("tmp_knj.bin", "knjige.bin");
-
 }

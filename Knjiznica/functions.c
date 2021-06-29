@@ -6,13 +6,13 @@
 #include "izbornik.h"
 FILE* fp;
 
-static int zad_id_Clanova;
+static int zad_id_clanova;
 
 
 void provjera_Kreiranje_file(const char* ime) {
 	fp = fopen(ime, "rb+");
 	if (fp == NULL) {
-		zad_id_Clanova = 0;
+		zad_id_clanova = 0;
 		fp = fopen(ime, "ab+");
 		//fwrite(&zad_id_Clanova, sizeof(int), 1, fp);
 		if (fp == NULL) {
@@ -22,7 +22,7 @@ void provjera_Kreiranje_file(const char* ime) {
 
 	}
 	else {
-		fread(&zad_id_Clanova, sizeof(int), 1, fp);
+		fread(&zad_id_clanova, sizeof(int), 1, fp);
 	}
 }
 void init_list(LISTA_CLANOVA* lista) {
@@ -84,7 +84,7 @@ void obrisi_clana(LISTA_CLANOVA* dll) {
 		temp->prev->next= temp->next;
 		free(temp);
 	}
-	fwrite(&zad_id_Clanova, sizeof(int), 1, fp_temp);
+	fwrite(&zad_id_clanova, sizeof(int), 1, fp_temp);
 	int fill;
 	fread(&fill, sizeof(int), 1, fp);
 	while (fread(&temp_dat, sizeof (CLAN), 1, fp) != NULL) {
@@ -164,9 +164,9 @@ CLAN* zapisi_clana(char* ime_datoteke) {
 		return NULL;
 	}
 	provjera_Kreiranje_file(ime_datoteke);
-	zad_id_Clanova++;
-	headNode->id = zad_id_Clanova;
-	printf("(%d)\n", zad_id_Clanova);
+	zad_id_clanova++;
+	headNode->id = zad_id_clanova;
+	printf("(%d)\n", zad_id_clanova);
 	//fp = fopen(ime_datoteke, "ab+");
 	if (fp == NULL) {
 		perror("File error");
@@ -174,7 +174,7 @@ CLAN* zapisi_clana(char* ime_datoteke) {
 		exit(-1);
 	}
 	fseek(fp, 0, SEEK_SET);
-	fwrite(&zad_id_Clanova, sizeof(int), 1, fp);
+	fwrite(&zad_id_clanova, sizeof(int), 1, fp);
 	if (headNode == NULL) {
 		perror("kreiranje liste na pocetku");
 		return NULL;
@@ -192,8 +192,8 @@ CLAN* zapisi_clana(char* ime_datoteke) {
 	fclose(fp);
 }
 
-void MergeSort(LISTA_CLANOVA* listaClanova){
-    CLAN* head = listaClanova->glava;
+void MergeSort(CLAN** listaClanova){
+    CLAN* head = *listaClanova;
     CLAN* a;
     CLAN* b;
     if ((head == NULL) || (head->next == NULL)) {
@@ -205,7 +205,7 @@ void MergeSort(LISTA_CLANOVA* listaClanova){
     MergeSort(&a);
     MergeSort(&b);
 
-    listaClanova->glava = SortedMerge(a, b);
+    *listaClanova = SortedMerge(a, b);
 }
  
 CLAN* SortedMerge(CLAN* a, CLAN* b)
@@ -246,7 +246,79 @@ void FrontBackSplit(CLAN* source, CLAN** frontRef, CLAN** backRef)
         }
     }
 
-    *frontRef = source;
-    *backRef = slow->next;
-    slow->next = NULL;
+	*frontRef = source;
+	slow->next->prev = NULL;
+	*backRef = slow->next;
+
+	slow->next = NULL;
+}
+
+void uredi_clana(CLAN* head) {
+	if (head->next == NULL && head->prev == NULL) {
+		return NULL;
+	}
+	char choice;
+	printf("\tID\t\tIME\t\tAUTOR\t   ZANR\n");
+	printf("\t%d\t%10s\t%10s\n\n", head->id, head->ime, head->prezime);
+	do {
+
+		printf("Koju varijablu zelite urediti\n");
+		printf("1.\tID\n");
+		printf("2.\tIME CLANA\n");
+		printf("3.\tPREZIME CLANA\n");
+		choice = _getch();
+		switch (choice) {
+		case'1':
+			getchar();
+			printf("Unesi novi ID: ");
+			scanf("%d", &head->id);
+			zapis_edita_clana(head);
+			break;
+		case'2':
+			getchar();
+			printf("Unesi novo ime clana: ");
+			scanf("%[^\n]", &head->ime);
+			return;
+		case'3':
+			getchar();
+			printf("Unesi novo prezime clana: ");
+			scanf("%s", &head->prezime);
+			break;
+		}
+	} while (choice != 'z');
+
+}
+
+void zapis_edita_clana(LISTA_CLANOVA* head) {
+	provjera_Kreiranje_file("clanovi.bin");
+	int ret;
+	FILE* fp_temp;
+	CLAN* flg = head->glava;
+	fp_temp = fopen("tmp_cln.bin", "wb");
+	if (!fp_temp) {
+		printf("nemoguce otvoriti temp file u brisanju");
+		return NULL;
+	}
+	fwrite(&zad_id_clanova, sizeof(int), 1, fp_temp);
+	while (flg->next != NULL) {
+		if (fwrite(flg, sizeof(CLAN), 1, fp_temp) == -1) {
+			printf("greska pisanja");
+			break;
+		}
+		flg = flg->next;
+	}
+	fwrite(flg, sizeof(CLAN), 1, fp_temp);
+	fclose(fp);
+
+	fclose(fp_temp);
+	ret = remove("clanovi.bin");
+
+	if (ret == 0) {
+		printf("File deleted successfully");
+	}
+	else {
+		printf("Error: unable to delete the file");
+	}
+
+	rename("tmp_cln.bin", "clanovi.bin");
 }

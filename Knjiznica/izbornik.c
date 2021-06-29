@@ -39,7 +39,7 @@ void izbornik() {
 					ispis_clanova(popisClanova);
 					do {
 						choice_two = _getch();
-					} while (choice_two != 'z');
+					} while (choice_two != 8);
 					break;
 				case'2':
 
@@ -47,7 +47,7 @@ void izbornik() {
 					zapisi_clana("clanovi.bin");
 					do {
 						choice_two = _getch();
-					} while (choice_two != 'z');
+					} while (choice_two != 8);
 					break;
 				case '3':
 
@@ -58,24 +58,43 @@ void izbornik() {
 					ispis_clanova(popisClanova);
 					obrisi_clana(popisClanova);
 
+					do {
+						choice_two = _getch();
+					} while (choice_two != 8);
 					break;
+				case'4':
+					popisClanova = ucitaj_podatke("clanovi.bin");
+					if (popisClanova == NULL) {
+						printf("nema clanova");
+						break;
+					}
+					ispis_clanova(popisClanova);
+					printf("\nIzaberite ID clana kojeg zelite urediti:");
 
+					scanf("%d", &choice_id);
+					uredi_clana(nadi_clana(popisClanova, choice_id));
+					ispis_clanova(popisClanova);
+					zapis_edita_clana(popisClanova);
+					do {
+						choice_two = _getch();
+					} while (choice_two != 8);
+					break;
 				case '5':
 					popisClanova = ucitaj_podatke("clanovi.bin");
 					if (popisClanova == NULL) {
 						printf("nema clanova");
 						break;
 					}
-					MergeSort(popisClanova);
+					MergeSort(&(popisClanova->glava));
 					ispis_clanova(popisClanova);
 					do {
 						choice_two = _getch();
-					} while (choice_two != 'z');
+					} while (choice_two != 8);
 					break;
 				case 27:
 					break;
 				}
-			} while (choice_two != '0');
+			} while (choice_two != 8);
 			break;
 		case'2':
 			do{
@@ -99,7 +118,7 @@ void izbornik() {
 					ispis_knjiga(popisKnjiga);
 					do {
 						choice_two = _getch();
-					} while (choice_two != 'z');
+					} while (choice_two != 8);
 					break;
 				case'2':
 					system("cls");
@@ -115,7 +134,7 @@ void izbornik() {
 					obrisi_knjigu(popisKnjiga);
 					do {
 						choice_two = _getch();
-					} while (choice_two != 'z');
+					} while (choice_two != 8);
 					break;
 				case'4':
 					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
@@ -132,7 +151,7 @@ void izbornik() {
 					zapis_edita_knjige(popisKnjiga, br_knj,"knjige.bin");
 					do {
 						choice_two = _getch();
-					} while (choice_two != 'z');
+					} while (choice_two != 8);
 					break;
 
 				case '5':
@@ -145,10 +164,10 @@ void izbornik() {
 					ispis_knjiga(popisKnjiga);
 					do {
 						choice_two = _getch();
-					} while (choice_two != 'z');
+					} while (choice_two != 8);
 					break;
 				}
-			} while (choice_two != '0');
+			} while (choice_two != 8);
 			
 			break;
 		case '3':
@@ -181,7 +200,7 @@ void izbornik() {
 		case 27:
 			exit(-1);
 		}
-	} while (choice != '0');
+	} while (choice != 27);
 	_getch();
 
 

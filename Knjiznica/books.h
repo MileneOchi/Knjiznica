@@ -36,5 +36,5 @@ KNJIGA* SortedMergeKnjiga(KNJIGA*, KNJIGA*);
 void FrontBackSplitKnjiga(KNJIGA*, KNJIGA**, KNJIGA**);
 KNJIGA* nadi_knjigu(LISTA_KNJIGA*, int);
 void uredi_knjigu(KNJIGA*);
-void zapis_edita_knjige(LISTA_KNJIGA*,int,char*);
+void zapis_edita_knjige(LISTA_KNJIGA*);
 #endif
