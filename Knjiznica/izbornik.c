@@ -37,11 +37,17 @@ void izbornik() {
 				case '1':
 					system("cls");
 					popisClanova = ucitaj_podatke("clanovi.bin");
-					if (popisClanova == NULL) {
-						printf("nema clanova");
-						break;
+					if (popisClanova->glava == NULL && popisClanova->rep == NULL) {
+						printf("Nema clanova za ispis");
+
 					}
-					ispis_clanova(popisClanova);
+					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
+					if (popisKnjiga->glava == NULL && popisKnjiga->rep == NULL) {
+						printf("Nema knjiga za ispis");
+
+					}
+
+					ispis_clanova(popisClanova,popisKnjiga);
 					printf("Pritisnite backspace za povratak");
 					do {
 						choice_two = _getch();
@@ -57,12 +63,18 @@ void izbornik() {
 					} while (choice_two != 8);
 					break;
 				case '3':
-
 					popisClanova = ucitaj_podatke("clanovi.bin");
-					if (popisClanova == NULL) {
-						printf("nema clanova");
+					if (popisClanova->glava == NULL && popisClanova->rep == NULL) {
+						printf("Nema clanova za ispis");
+
 					}
-					ispis_clanova(popisClanova);
+					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
+					if (popisKnjiga->glava == NULL && popisKnjiga->rep == NULL) {
+						printf("Nema knjiga za ispis");
+
+					}
+
+					ispis_clanova(popisClanova, popisKnjiga);
 					obrisi_clana(popisClanova);
 					printf("Pritisnite backspace za povratak");
 
@@ -72,16 +84,22 @@ void izbornik() {
 					break;
 				case'4':
 					popisClanova = ucitaj_podatke("clanovi.bin");
-					if (popisClanova == NULL) {
-						printf("nema clanova");
-						break;
+					if (popisClanova->glava == NULL && popisClanova->rep == NULL) {
+						printf("Nema clanova za ispis");
+
 					}
-					ispis_clanova(popisClanova);
+					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
+					if (popisKnjiga->glava == NULL && popisKnjiga->rep == NULL) {
+						printf("Nema knjiga za ispis");
+
+					}
+
+					ispis_clanova(popisClanova, popisKnjiga);
 					printf("\nIzaberite ID clana kojeg zelite urediti:");
 
 					scanf("%d", &choice_id);
 					uredi_clana(nadi_clana(popisClanova, choice_id));
-					ispis_clanova(popisClanova);
+					ispis_clanova(popisClanova,popisKnjiga);
 					zapis_edita_clana(popisClanova);
 					do {
 						choice_two = _getch();
@@ -89,12 +107,19 @@ void izbornik() {
 					break;
 				case '5':
 					popisClanova = ucitaj_podatke("clanovi.bin");
-					if (popisClanova == NULL) {
-						printf("nema clanova");
-						break;
+					if (popisClanova->glava == NULL && popisClanova->rep == NULL) {
+						printf("Nema clanova za ispis");
+
 					}
 					MergeSort(&(popisClanova->glava));
-					ispis_clanova(popisClanova);
+					
+					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
+					if (popisKnjiga->glava == NULL && popisKnjiga->rep == NULL) {
+						printf("Nema knjiga za ispis");
+
+					}
+
+					ispis_clanova(popisClanova, popisKnjiga);
 					printf("Pritisnite backspace za povratak");
 					do {
 						choice_two = _getch();
@@ -215,11 +240,17 @@ void izbornik() {
 			system("cls");
 
 			popisClanova = ucitaj_podatke("clanovi.bin");
-			if (popisClanova == NULL) {
-				printf("nema clanova");
-				break;
+			if (popisClanova->glava == NULL && popisClanova->rep == NULL) {
+				printf("Nema clanova za ispis");
+
 			}
-			ispis_clanova(popisClanova);
+			popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
+			if (popisKnjiga->glava == NULL && popisKnjiga->rep == NULL) {
+				printf("Nema knjiga za ispis");
+
+			}
+
+			ispis_clanova(popisClanova, popisKnjiga);
 
 			
 

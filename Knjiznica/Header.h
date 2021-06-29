@@ -25,7 +25,7 @@ void init_list(LISTA_CLANOVA*);
 void dodaj_clan(LISTA_CLANOVA*, CLAN*);
 void obrisi_clana(LISTA_CLANOVA*);
 CLAN* nadi_clana(LISTA_CLANOVA*, int);
-void ispis_clanova(LISTA_CLANOVA*);
+void ispis_clanova(LISTA_CLANOVA*,LISTA_KNJIGA*);
 LISTA_CLANOVA* ucitaj_podatke(char*);
 CLAN* zapisi_clana(char*);
 void MergeSort(CLAN**);

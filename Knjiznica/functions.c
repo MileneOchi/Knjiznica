@@ -120,21 +120,31 @@ CLAN* nadi_clana(LISTA_CLANOVA* dll, int id) {
 	return clan;
 }
 
-void ispis_clanova(LISTA_CLANOVA* lista) {
+void ispis_clanova(LISTA_CLANOVA* lista,LISTA_KNJIGA*lista_knjiga) {
 	int br = 1;
+	int br_2 = 0;
 	CLAN* pointer = lista->glava;
+	KNJIGA* p = NULL;
 	printf("\n");
 	if (lista->glava == NULL) {
 		return;
 	}
-	printf("\tID\t      IME\t    PREZIME\n");
+	printf("\tID\t      IME\t    PREZIME\tBROJ KNJIGA\n");
 	while (pointer->next != NULL) {
 
-		printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->prezime);
+		printf("%d.\t%d\t%10s\t%10s\t%d\n", br, pointer->id, pointer->ime, pointer->prezime,pointer->book);
+		if (pointer->book != 0) {
+
+			p = nadi_knjigu(lista_knjiga, pointer->books[br_2++]);
+			if (p == NULL) {
+				return;
+			}
+			printf("%s", p->ime);
+		}
 		pointer = pointer->next;
 		br++;
 	}
-	printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->prezime);
+	printf("%d.\t%d\t%10s\t%10s\t%d\n", br, pointer->id, pointer->ime, pointer->prezime,pointer->book);
 }
 
 LISTA_CLANOVA* ucitaj_podatke(char* ime_datoteke) {
@@ -330,5 +340,4 @@ void posudba(CLAN* clan,KNJIGA*knjiga) {
 	knjiga->date = datum.tm_yday;
 	clan->book+=1;
 	clan->books[clan->book] = knjiga->id;
-	printf()
 }
