@@ -283,7 +283,7 @@ void uredi_knjigu(KNJIGA*head) {
 			getchar();
 			printf("Unesi novi ID:");
 			scanf("%d", &head->id);
-
+			zapis_edita_knjige(head);
 			break;
 		case'2':
 			getchar();
@@ -306,7 +306,14 @@ void uredi_knjigu(KNJIGA*head) {
 }
 
 void zapis_edita_knjige(LISTA_KNJIGA*head, int n,char*ime){
-	provjera_Kreiranje_knjige(ime);
+	FILE* fp_temp;
+	fp_temp = fopen("tmp_knj.bin", "wb");
+	if (!fp_temp) {
+		printf("nemoguce otvoriti temp file u brisanju");
+		return NULL;
+	}
 
-	
+	remove("knjige.bin");
+	rename("tmp_knj.bin", "knjige.bin");
+
 }
