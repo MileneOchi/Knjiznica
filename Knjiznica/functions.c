@@ -142,12 +142,13 @@ void ispis_clanova(LISTA_CLANOVA* lista,LISTA_KNJIGA*lista_knjiga) {
 			printf("%s\t", p->ime);
 		} while (pointer->book != 0);
 			
-		
+		br_2 = 0;
 		pointer = pointer->next;
 		br++;
 		printf("\n");
 	}
-	printf("%d.\t%d\t%10s\t%10s\t   %d\n", br, pointer->id, pointer->ime, pointer->prezime,pointer->book);
+	br_2 = 0;
+	printf("%d.\t%d\t%10s\t%10s\t   %d \t\t", br, pointer->id, pointer->ime, pointer->prezime,pointer->book);
 	do {
 		p = nadi_knjigu(lista_knjiga, pointer->books[br_2++]);
 		if (p == NULL) {
@@ -155,6 +156,7 @@ void ispis_clanova(LISTA_CLANOVA* lista,LISTA_KNJIGA*lista_knjiga) {
 		}
 		printf("%s\t", p->ime);
 	} while (pointer->book != 0);
+	printf("\n");
 }
 
 LISTA_CLANOVA* ucitaj_podatke(char* ime_datoteke) {

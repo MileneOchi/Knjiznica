@@ -25,14 +25,14 @@ void ispis_knjiga(LISTA_KNJIGA* lista) {
 	if (lista->glava == NULL) {
 		return;
 	}
-	printf("\tID\tIME\t\t\t  AUTOR\n");
+	printf("\tID\t\tIME\t\tAUTOR\n");
 	while (pointer->next != NULL) {
 
-		printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->autor_prezime);
+		printf("%d.\t%d\t%10s\t\t%10s\n", br, pointer->id, pointer->ime, pointer->autor_prezime);
 		pointer = pointer->next;
 		br++;
 	}
-	printf("%d.\t%d\t%10s\t%10s\n", br, pointer->id, pointer->ime, pointer->autor_prezime);
+	printf("%d.\t%d\t%10s\t\t%10s\n", br, pointer->id, pointer->ime, pointer->autor_prezime);
 }
 
 LISTA_KNJIGA* ucitaj_podatke_knjiga(char* ime_datoteke) {
