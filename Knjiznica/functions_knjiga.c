@@ -41,7 +41,7 @@ LISTA_KNJIGA* ucitaj_podatke_knjiga(char* ime_datoteke) {
 		perror("kreiranje");
 		return NULL;
 	}
-	provjera_Kreiranje_file(ime_datoteke);
+	provjera_Kreiranje_knjige(ime_datoteke);
 	KNJIGA* clan = (KNJIGA*)calloc(1, sizeof(KNJIGA));
 	if (clan == NULL) {
 		perror("kreiranje");
@@ -80,7 +80,6 @@ KNJIGA* zapisi_knjigu(char* ime_datoteke) {
 	else {
 		
 		printf("Unesite ime knjige: ");
-		getchar();
 		scanf("%[^\n]", &headNode->ime);
 		printf("Unesite ime autora knjige: ");
 		scanf("%s", &headNode->autor_ime);

@@ -137,7 +137,7 @@ void ispis_clanova(LISTA_CLANOVA* lista,LISTA_KNJIGA*lista_knjiga) {
 
 			p = nadi_knjigu(lista_knjiga, pointer->books[br_2++]);
 			if (p == NULL) {
-				return;
+				break;
 			}
 			printf("%s", p->ime);
 		}
@@ -339,5 +339,9 @@ void posudba(CLAN* clan,KNJIGA*knjiga) {
 	struct tm datum = *localtime(&vrijeme);
 	knjiga->date = datum.tm_yday;
 	clan->book+=1;
-	clan->books[clan->book] = knjiga->id;
+	for (int i = 0; i < clan->book; i++) {
+		if (clan->books[i] == 0) {
+			clan->books[i] = knjiga->id;
+		}
+	}
 }

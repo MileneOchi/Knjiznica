@@ -272,7 +272,7 @@ void izbornik() {
 				scanf("%d", &choice_id_knjiga);
 				check_knj= nadi_knjigu(popisKnjiga, choice_id_knjiga);
 			} while (check_knj == NULL);
-			posudba(nadi_clana(popisClanova, choice_id), nadi_knjigu(popisKnjiga, choice_id_knjiga));
+			posudba(check, check_knj);
 			zapis_edita_clana(popisClanova);
 			zapis_edita_knjige(popisKnjiga);
 
