@@ -271,7 +271,7 @@ void izbornik() {
 				printf("\nUnesite ID-knjige koji posuduje knjigu\n");
 				scanf("%d", &choice_id_knjiga);
 				check_knj= nadi_knjigu(popisKnjiga, choice_id_knjiga);
-			} while (check_knj == NULL);
+			} while ((check_knj == NULL||check_knj->state==1)&&printf("Knjiga je posuden ili ne postoji"));
 			posudba(check, check_knj);
 			zapis_edita_clana(popisClanova);
 			zapis_edita_knjige(popisKnjiga);
