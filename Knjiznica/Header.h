@@ -34,4 +34,5 @@ void FrontBackSplit(CLAN*,CLAN**, CLAN**);
 void uredi_clana(CLAN*);
 void zapis_edita_clana(LISTA_CLANOVA*);
 void posudba(CLAN*,KNJIGA*);
+void vracanje(CLAN*, KNJIGA*);
 #endif

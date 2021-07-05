@@ -206,6 +206,7 @@ CLAN* zapisi_clana(char* ime_datoteke) {
 		scanf("%s", &headNode->ime);
 		printf("Unesite prezime novog korisnika: ");
 		scanf("%s", &headNode->prezime);
+		getchar();
 	}
 	fclose(fp);
 	fp = fopen(ime_datoteke, "ab+");
@@ -280,7 +281,7 @@ void uredi_clana(CLAN* head) {
 		return NULL;
 	}
 	char choice;
-	printf("\tID\t\tIME\t\tAUTOR\t   ZANR\n");
+	printf("\tID\t\tIME\t\tAUTOR\n");
 	printf("\t%d\t%10s\t%10s\n\n", head->id, head->ime, head->prezime);
 	do {
 
@@ -335,7 +336,7 @@ void zapis_edita_clana(LISTA_CLANOVA* head) {
 	ret = remove("clanovi.bin");
 
 	if (ret == 0) {
-		printf("File deleted successfully");
+		printf("Uspjesno upisani u datoteku clanovi\n");
 	}
 	else {
 		printf("Error: unable to delete the file");
@@ -356,4 +357,17 @@ void posudba(CLAN* clan,KNJIGA*knjiga) {
 			clan->books[i] = knjiga->id;
 		}
 	}
+}
+
+void vracanje(CLAN* clan, KNJIGA* knjiga) {
+	knjiga->id_clana = NULL;
+	knjiga->state = 0;
+	
+	knjiga->date = NULL;
+	for (int i = 0; i < clan->book; i++) {
+		if (clan->books[i] == knjiga->id) {
+			clan->books[i] = 0;
+		}
+	}
+	clan->book -= 1;
 }

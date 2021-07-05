@@ -28,11 +28,20 @@ void ispis_knjiga(LISTA_KNJIGA* lista) {
 	printf("\tID\t\tIME\t\tAUTOR\n");
 	while (pointer->next != NULL) {
 
-		printf("%d.\t%d\t%10s\t\t%10s\n", br, pointer->id, pointer->ime, pointer->autor_prezime);
+		printf("%d.\t%d\t%10s\t%10s", br, pointer->id, pointer->ime, pointer->autor_prezime);
+		if (pointer->state == 1) {
+			printf("\tPOSUDENA\n");
+	
+		}
+		else(printf("\n"));
 		pointer = pointer->next;
 		br++;
 	}
-	printf("%d.\t%d\t%10s\t\t%10s\n", br, pointer->id, pointer->ime, pointer->autor_prezime);
+	printf("%d.\t%d\t%10s\t%10s", br, pointer->id, pointer->ime, pointer->autor_prezime);
+	if (pointer->state == 1) {
+		printf("\tPOSUDENA\n");
+	}
+	printf("\n");
 }
 
 LISTA_KNJIGA* ucitaj_podatke_knjiga(char* ime_datoteke) {
@@ -85,7 +94,6 @@ KNJIGA* zapisi_knjigu(char* ime_datoteke) {
 		scanf("%s", &headNode->autor_ime);
 		printf("Unesite prezime autora knjige: ");
 		scanf("%s", &headNode->autor_prezime);
-		
 		printf("Unesite zanr kjige: ");
 		scanf("%s", &headNode->zanr);
 		getchar();
@@ -195,7 +203,7 @@ void obrisi_knjigu(LISTA_KNJIGA* dll) {
 
 	remove("knjige.bin");
 	rename("tmp_knj.bin", "knjige.bin");
-
+	getchar();
 
 }
 
@@ -328,7 +336,7 @@ void zapis_edita_knjige(LISTA_KNJIGA*head){
 	ret=remove("knjige.bin");
 
 	if (ret == 0) {
-		printf("File deleted successfully");
+		printf("Uspjesno upisani u datoteku knjige");
 	}
 	else {
 		printf("Error: unable to delete the file");

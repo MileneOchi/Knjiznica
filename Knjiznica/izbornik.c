@@ -10,14 +10,15 @@ void izbornik() {
 	int choice_id_knjiga;
 	CLAN* check = NULL;
 	KNJIGA* check_knj= NULL;
+	KNJIGA* p = NULL;
+	int br = 0;
 	do {
 		system("cls");
 		printf("            GLAVNI IZBORNIK           \n");
-		printf("1. Upravljanje: clanovi\n");
-		printf("2. Upravljanje: knjige\n");
-		printf("3. Pretraga clan\n");
-		printf("4. Pretraga knjiga\n");
-		printf("5. Posudba knjige\n");
+		printf("1. Upravljanje: Clanovi\n");
+		printf("2. Upravljanje: Knjige\n");
+		printf("3. Posudba knjige\n");
+		printf("4. Vracanje knjige\n");
 		printf("Pritisnite ESCAPE za izlazak");
 		printf("");
 		choice = _getch();
@@ -101,6 +102,7 @@ void izbornik() {
 					uredi_clana(nadi_clana(popisClanova, choice_id));
 					ispis_clanova(popisClanova,popisKnjiga);
 					zapis_edita_clana(popisClanova);
+					printf("Pritisnite backspace za povratak");
 					do {
 						choice_two = _getch();
 					} while (choice_two != 8);
@@ -167,6 +169,7 @@ void izbornik() {
 						break;
 					}
 					ispis_knjiga(popisKnjiga);
+					printf("\n");
 					obrisi_knjigu(popisKnjiga);
 					printf("Pritisnite backspace za povratak");
 					do {
@@ -210,33 +213,8 @@ void izbornik() {
 			} while (choice_two != 8);
 			
 			break;
-		case '3':
-			system("cls");
-			printf("Pretrazivanje clana po: \n");
-			printf("1.ID-u\n");
-			printf("2.Ime\n");
-			choice_two = _getch();
-			switch (choice_two) {
-			case '1':
-				system("cls");
-			}
-			break;
-		case '4':
-			system("cls");
-			printf("Pretrazivanje knjige po: \n");
-			printf("1.ID-u\n");
-			printf("2.Ime knjige\n");
-			printf("3.Ime autora\n");
-			printf("4.Zanr\n");
-			choice_two = _getch();
-			switch (choice_two) {
-			case '1':
-				system("cls");
-
-			}
-			break;
-
-		case'5':
+		
+		case'3':
 			system("cls");
 
 			popisClanova = ucitaj_podatke("clanovi.bin");
@@ -249,13 +227,10 @@ void izbornik() {
 				printf("Nema knjiga za ispis");
 
 			}
-
 			ispis_clanova(popisClanova, popisKnjiga);
 
-			
-
 			do {
-				printf("\nUnesite ID-clana koji posuduje knjigu\n");
+				printf("\nUnesite ID-clana koji posuduje knjigu: ");
 				scanf("%d", &choice_id);
 				check = nadi_clana(popisClanova, choice_id);
 			} while (check == NULL);
@@ -268,14 +243,64 @@ void izbornik() {
 			ispis_knjiga(popisKnjiga);
 			getchar();
 			do {
-				printf("\nUnesite ID-knjige koji posuduje knjigu\n");
+				printf("\nUnesite ID-knjige koji posuduje knjigu: ");
 				scanf("%d", &choice_id_knjiga);
 				check_knj= nadi_knjigu(popisKnjiga, choice_id_knjiga);
-			} while ((check_knj == NULL||check_knj->state==1)&&printf("Knjiga je posuden ili ne postoji"));
+			} while ((check_knj == NULL||check_knj->state==1)&&printf("Knjiga je posudena ili ne postoji"));
 			posudba(check, check_knj);
 			zapis_edita_clana(popisClanova);
 			zapis_edita_knjige(popisKnjiga);
 
+			printf("\nPritisnite backspace za povratak");
+			do {
+				choice_two = _getch();
+			} while (choice_two != 8);
+			break;
+		case'4':
+			system("cls");
+
+			popisClanova = ucitaj_podatke("clanovi.bin");
+			if (popisClanova->glava == NULL && popisClanova->rep == NULL) {
+				printf("Nema clanova za ispis");
+
+			}
+			popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
+			if (popisKnjiga->glava == NULL && popisKnjiga->rep == NULL) {
+				printf("Nema knjiga za ispis");
+
+			}
+			ispis_clanova(popisClanova, popisKnjiga);
+			do {
+				printf("\nUnesite ID-clana koji vraca knjigu: ");
+				scanf("%d", &choice_id);
+				check = nadi_clana(popisClanova, choice_id);
+			} while (check == NULL||check->book==0&&printf("Korisnik nema posudenu knjigu ili ne postoji\n"));
+
+			popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
+			if (popisKnjiga->glava == NULL && popisKnjiga->rep == NULL) {
+				printf("Nema knjiga za ispis");
+
+			}
+			printf("ID\tIME KNJIGE\tAUTOR KNJIGE\n\n");
+			do {
+				p = nadi_knjigu(popisKnjiga, check->books[br++]);
+				if (p == NULL) {
+					break;
+				}
+				printf("%d\t%s\t%s\t\n",p->id, p->ime,p->autor_prezime);
+			} while (check->book != 0);
+
+			getchar();
+			do {
+				printf("\nUnesite ID-knjige koju korisnik vraca: ");
+				scanf("%d", &choice_id_knjiga);
+				check_knj = nadi_knjigu(popisKnjiga, choice_id_knjiga);
+			} while ((check_knj == NULL || check_knj->id_clana!=check->id) && printf("Knjiga je posuden ili ne postoji"));
+			while (check->id == check_knj->id_clana) {
+				vracanje(check, check_knj);
+			}
+			zapis_edita_clana(popisClanova);
+			zapis_edita_knjige(popisKnjiga);
 			printf("\nPritisnite backspace za povratak");
 			do {
 				choice_two = _getch();
