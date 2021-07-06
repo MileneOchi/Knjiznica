@@ -14,7 +14,7 @@ typedef struct Knjiga {
 	char zanr[20];
 	int state;
 	int id_clana;
-	int date;
+	char date[30];
 	struct Knjiga* next;
 	struct Knjiga* prev;
 } KNJIGA;

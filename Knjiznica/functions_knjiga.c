@@ -8,6 +8,9 @@ int br_knj = 0;
 KNJIGA* nadi_knjigu(LISTA_KNJIGA* dll, int id) {
 	br_knj = 0;
 	KNJIGA* clan = dll->glava;
+	if (clan == NULL) {
+		return;
+	}
 	while (clan->id != id) {
 		if (clan->next == NULL) {
 			return NULL;
@@ -344,3 +347,4 @@ void zapis_edita_knjige(LISTA_KNJIGA*head){
 
 	rename("tmp_knj.bin", "knjige.bin");
 }
+

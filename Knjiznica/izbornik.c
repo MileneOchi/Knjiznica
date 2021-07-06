@@ -127,6 +127,7 @@ void izbornik() {
 						choice_two = _getch();
 					} while (choice_two != 8);
 					break;
+			
 				case 27:
 					break;
 				}
@@ -141,7 +142,7 @@ void izbornik() {
 				printf("3.Obrisi knjigu\n");
 				printf("4.Uredi knjigu\n");
 				printf("5.Sortiranje knjiga\n");
-
+				printf("6.Detaljan ispis knjiga\n");
 				printf("\nPritisnite backspace za povratak...");
 				choice_two = _getch();
 				switch (choice_two) {
@@ -203,6 +204,22 @@ void izbornik() {
 					}
 					MergeSortKnjiga(&(popisKnjiga->glava));
 					ispis_knjiga(popisKnjiga);
+					printf("Pritisnite backspace za povratak");
+					do {
+						choice_two = _getch();
+					} while (choice_two != 8);
+					break;
+				case'6':
+					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
+					if (popisKnjiga->glava == NULL && popisKnjiga->rep == NULL) {
+						printf("Nema knjiga za ispis");
+					}
+					popisClanova = ucitaj_podatke("clanovi.bin");
+					if (popisClanova->glava == NULL && popisClanova->rep == NULL) {
+						printf("Nema clanova za ispis");
+
+					}
+					det_ispis(popisKnjiga, popisClanova);
 					printf("Pritisnite backspace za povratak");
 					do {
 						choice_two = _getch();
@@ -289,7 +306,7 @@ void izbornik() {
 				}
 				printf("%d\t%s\t%s\t\n",p->id, p->ime,p->autor_prezime);
 			} while (check->book != 0);
-
+			br = 0;
 			getchar();
 			do {
 				printf("\nUnesite ID-knjige koju korisnik vraca: ");

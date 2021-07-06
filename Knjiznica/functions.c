@@ -140,7 +140,7 @@ void ispis_clanova(LISTA_CLANOVA* lista,LISTA_KNJIGA*lista_knjiga) {
 				break;
 			}
 			printf("%s\t", p->ime);
-		} while (pointer->book != 0);
+		} while (pointer->book != 0&&p==NULL);
 			
 		br_2 = 0;
 		pointer = pointer->next;
@@ -348,9 +348,11 @@ void zapis_edita_clana(LISTA_CLANOVA* head) {
 void posudba(CLAN* clan,KNJIGA*knjiga) {
 	knjiga->id_clana = clan->id;
 	knjiga->state = 1;
-	time_t vrijeme = time(NULL);
-	struct tm datum = *localtime(&vrijeme);
-	knjiga->date = datum.tm_yday;
+	time_t vrijeme ;
+	struct tm* datum;
+	time(&vrijeme);
+	datum = localtime(&vrijeme);
+	strftime(knjiga->date, 30, "%c", datum);
 	clan->book+=1;
 	for (int i = 0; i < clan->book; i++) {
 		if (clan->books[i] == 0) {
@@ -360,14 +362,43 @@ void posudba(CLAN* clan,KNJIGA*knjiga) {
 }
 
 void vracanje(CLAN* clan, KNJIGA* knjiga) {
+	int j=0;
 	knjiga->id_clana = NULL;
 	knjiga->state = 0;
+	while (j < 30) {
+		knjiga->date[j++] = '\0';
+	}
 	
-	knjiga->date = NULL;
 	for (int i = 0; i < clan->book; i++) {
 		if (clan->books[i] == knjiga->id) {
 			clan->books[i] = 0;
 		}
 	}
 	clan->book -= 1;
+}
+
+void det_ispis(LISTA_KNJIGA* lista, LISTA_CLANOVA* lista_clan) {
+	int br = 1;
+	KNJIGA* pointer = lista->glava;
+	printf("\n");
+	if (lista->glava == NULL) {
+		return;
+	}
+	printf("   ID\t\tDATUM POSUDBE\t\t\tIME\tAUTOR\t\tZANR\n");
+	while (pointer->next != NULL) {
+
+		printf("%d. %d%30s\t   %10s\t%s %s\t%5s", br,pointer->id, pointer->date, pointer->ime, pointer->autor_ime, pointer->autor_prezime, pointer->zanr);
+		if (pointer->state == 1) {
+			printf("\tPOSUDENA\n");
+
+		}
+		else(printf("\n"));
+		pointer = pointer->next;
+		br++;
+	}
+	printf("%d. %d%30s\t   %10s\t%s %s\t%5s", br,pointer->id, pointer->date, pointer->ime, pointer->autor_ime, pointer->autor_prezime, pointer->zanr);
+	if (pointer->state == 1) {
+		printf("\tPOSUDENA\n");
+	}
+	printf("\n");
 }
