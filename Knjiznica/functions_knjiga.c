@@ -9,7 +9,7 @@ KNJIGA* nadi_knjigu(LISTA_KNJIGA* dll, int id) {
 	br_knj = 0;
 	KNJIGA* clan = dll->glava;
 	if (clan == NULL) {
-		return;
+		return NULL;
 	}
 	while (clan->id != id) {
 		if (clan->next == NULL) {
@@ -28,24 +28,27 @@ void ispis_knjiga(LISTA_KNJIGA* lista) {
 	if (lista->glava == NULL) {
 		return;
 	}
-	printf("\tID\t\tIME\t\tAUTOR\n");
+	printf("\tID\t\tIME\t\tAUTOR\tSTATUS\n");
 	while (pointer->next != NULL) {
 
-		printf("%d.\t%d\t%10s\t%10s", br, pointer->id, pointer->ime, pointer->autor_prezime);
+		printf("%d.\t%d\t    %10s\t   %10s", br, pointer->id, pointer->ime, pointer->autor_prezime);
 		if (pointer->state == 1) {
 			printf("\tPOSUDENA\n");
 	
 		}
-		else(printf("\n"));
+		else(printf("\tNIJE POSUDENA\n"));
 		pointer = pointer->next;
 		br++;
 	}
-	printf("%d.\t%d\t%10s\t%10s", br, pointer->id, pointer->ime, pointer->autor_prezime);
+	printf("%d.\t%d\t    %10s\t   %10s", br, pointer->id, pointer->ime, pointer->autor_prezime);
 	if (pointer->state == 1) {
 		printf("\tPOSUDENA\n");
 	}
-	printf("\n");
+	else if (pointer->state == 0) {
+		printf("\tNIJE POSUDENA\n");
+	}
 }
+
 
 LISTA_KNJIGA* ucitaj_podatke_knjiga(char* ime_datoteke) {
 	LISTA_KNJIGA* lista = (LISTA_KNJIGA*)calloc(1, sizeof(LISTA_KNJIGA));
@@ -154,23 +157,31 @@ void obrisi_knjigu(LISTA_KNJIGA* dll) {
 	KNJIGA temp_dat;
 	int foundDat = 0;
 	int id_knjige;
+	if (dll->glava == NULL) {
+		return;
+	}
 	fp = fopen("knjige.bin", "rb");
 	if (!fp) {
 		printf("nemoguce otvoriti");
-		return NULL;
+		return;
 	}
 	fp_temp = fopen("tmp_knj.bin", "wb");
 	if (!fp_temp) {
 		printf("nemoguce otvoriti temp file u brisanju");
-		return NULL;
+		return;
 	}
 	printf("Unesite ID clana kojeg zelite obrisati: ");
 	scanf("%d", &id_knjige);
 	KNJIGA* temp;
 	temp = dll->glava;
 	if (temp->id == id_knjige){
-		temp->next->prev = NULL;
-		dll->glava = dll->glava->next;
+		if (temp->next == NULL) {
+			dll->glava = NULL;
+		}
+		else {
+			temp->next->prev = NULL;
+			dll->glava = dll->glava->next;
+		}
 		free(temp);
 	}else if (dll->rep->id == id_knjige){
 		KNJIGA* obrisat = dll->rep;
@@ -179,8 +190,13 @@ void obrisi_knjigu(LISTA_KNJIGA* dll) {
 		free(obrisat);
 	}
 	else {
-		while (temp->id != id_knjige)
+		while (temp->id != id_knjige) {
 			temp = temp->next;
+			if (temp == NULL) {
+				printf("Knjiga s tim ID-om ne postoji");
+				return;
+			}
+		}
 		temp->next->prev = temp->prev;
 		temp->prev->next= temp->next;
 		free(temp);
@@ -190,7 +206,7 @@ void obrisi_knjigu(LISTA_KNJIGA* dll) {
 	fread(&fill, sizeof(int), 1, fp);
 	while (fread(&temp_dat, sizeof (KNJIGA), 1, fp) != NULL) {
 		if (temp_dat.id==id_knjige) {
-			printf("Pronadjen i obrisan iz datoteke.\n\n");
+			printf("Pronadjena i obrisana iz datoteke.\n\n");
 			foundDat = 1;
 		}
 		else {
@@ -272,13 +288,20 @@ void FrontBackSplitKnjiga(KNJIGA* source, KNJIGA** frontRef, KNJIGA** backRef)
 	slow->next = NULL;
 }
 
-void uredi_knjigu(KNJIGA*head) {
-	if (head->next == NULL && head->prev == NULL) {
-		return NULL;
+void uredi_knjigu(LISTA_KNJIGA*lista) {
+	int choice_id;
+	if (lista->glava == NULL && lista->rep == NULL) {
+		return;
 	}
+	ispis_knjiga(lista);
+	printf("\nIzaberite ID knjige koje zelite urediti:");
+
+	scanf("%d", &choice_id);
+	
+	KNJIGA* temp = nadi_knjigu(lista, choice_id);
 	char choice;
 	printf("\tID\t\tIME\t\tAUTOR\t   ZANR\n");
-	printf("\t%d\t%10s\t%10s\t%10s\n\n", head->id, head->ime, head->autor_prezime,head->zanr);
+	printf("\t%d\t%10s\t%10s\t%10s\n\n", temp->id, temp->ime, temp->autor_prezime,temp->zanr);
 	do {
 		
 		printf("Koju varijablu zelite urediti\n");
@@ -292,22 +315,22 @@ void uredi_knjigu(KNJIGA*head) {
 		case'1':
 			getchar();
 			printf("Unesi novi ID:");
-			scanf("%d", &head->id);
+			scanf("%d", &temp->id);
 			break;
 		case'2':
 			getchar();
 			printf("Unesi novo ime knjige");
-			scanf("%[^\n]", &head->ime);
+			scanf("%[^\n]", &temp->ime);
 			return;
 		case'3':
 			getchar();
 			printf("Unesi novo ime autora");
-			scanf("%s", &head->autor_ime);
+			scanf("%s", &temp->autor_ime);
 			break;
 		case'4':
 			getchar();
 			printf("Unesi novo prezime autora knjige: ");
-			scanf("%s", &head->autor_prezime);
+			scanf("%s", &temp->autor_prezime);
 			break;
 		}
 	} while (choice != 'z');
@@ -319,10 +342,13 @@ void zapis_edita_knjige(LISTA_KNJIGA*head){
 	int ret;
 	FILE* fp_temp;
 	KNJIGA* flg = head->glava;
+	if (head->glava == NULL) {
+		return;
+	}
 	fp_temp = fopen("tmp_knj.bin", "wb");
 	if (!fp_temp) {
 		printf("nemoguce otvoriti temp file u brisanju");
-		return NULL;
+		return ;
 	}
 	fwrite(&zad_id_knjiga, sizeof(int), 1, fp_temp);
 	while(flg->next!=NULL){
@@ -339,10 +365,10 @@ void zapis_edita_knjige(LISTA_KNJIGA*head){
 	ret=remove("knjige.bin");
 
 	if (ret == 0) {
-		printf("Uspjesno upisani u datoteku knjige");
+		printf("Uspjesno upisani u datoteku knjige\n");
 	}
 	else {
-		printf("Error: unable to delete the file");
+		printf("Error: nemoguc upis u datoteku knjige");
 	}
 
 	rename("tmp_knj.bin", "knjige.bin");

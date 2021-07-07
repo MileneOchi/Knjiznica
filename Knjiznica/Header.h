@@ -31,9 +31,9 @@ CLAN* zapisi_clana(char*);
 void MergeSort(CLAN**);
 CLAN* SortedMerge(CLAN*, CLAN*);
 void FrontBackSplit(CLAN*,CLAN**, CLAN**);
-void uredi_clana(CLAN*);
+void uredi_clana(LISTA_CLANOVA*);
 void zapis_edita_clana(LISTA_CLANOVA*);
-void posudba(CLAN*,KNJIGA*);
-void vracanje(CLAN*, KNJIGA*);
+void posudba(LISTA_CLANOVA*,LISTA_KNJIGA*);
+void vracanje(LISTA_CLANOVA*, LISTA_KNJIGA*);
 void det_ispis(LISTA_KNJIGA*, LISTA_CLANOVA*);
 #endif

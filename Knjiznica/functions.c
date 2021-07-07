@@ -53,23 +53,31 @@ void obrisi_clana(LISTA_CLANOVA* dll) {
 	CLAN temp_dat;
 	int foundDat = 0;
 	int id_clan;
+	if (dll->glava == NULL&&dll->rep==NULL) {
+		return;
+	}
 	fp = fopen("clanovi.bin", "rb");
 	if (!fp) {
 		printf("nemoguce otvoriti");
-		return NULL;
+		return ;
 	}
 	fp_temp = fopen("tmp.bin", "wb");
 	if (!fp_temp) {
 		printf("nemoguce otvoriti temp file u brisanju");
-		return NULL;
+		return;
 	}
 	printf("Unesite ID clana kojeg zelite obrisati: ");
 	scanf("%d", &id_clan);
 	CLAN * temp;
 	temp = dll->glava;
 	if (temp->id == id_clan){
-		temp->next->prev = NULL;
-		dll->glava = dll->glava->next;
+		if (temp->next == NULL) {
+			dll->glava = NULL;
+		}
+		else {
+			temp->next->prev = NULL;
+			dll->glava = dll->glava->next;
+		}
 		free(temp);
 	}else if (dll->rep->id == id_clan){
 		CLAN* obrisat = dll->rep;
@@ -78,8 +86,13 @@ void obrisi_clana(LISTA_CLANOVA* dll) {
 		free(obrisat);
 	}
 	else {
-		while (temp->id != id_clan)
+		while (temp->id != id_clan){
 			temp = temp->next;
+			if (temp == NULL) {
+				printf("\nTaj clan ne postoji");
+				return;
+			}
+		}
 		temp->next->prev = temp->prev;
 		temp->prev->next= temp->next;
 		free(temp);
@@ -276,13 +289,18 @@ void FrontBackSplit(CLAN* source, CLAN** frontRef, CLAN** backRef)
 	slow->next = NULL;
 }
 
-void uredi_clana(CLAN* head) {
-	if (head->next == NULL && head->prev == NULL) {
-		return NULL;
+void uredi_clana(LISTA_CLANOVA* lista) {
+	int choice_id;
+	if (lista->glava == NULL && lista->rep == NULL) {
+		return;
 	}
+	printf("\nIzaberite ID clana kojeg zelite urediti:");
+
+	scanf("%d", &choice_id);
+	CLAN*temp=nadi_clana(lista, choice_id);
 	char choice;
 	printf("\tID\t\tIME\t\tAUTOR\n");
-	printf("\t%d\t%10s\t%10s\n\n", head->id, head->ime, head->prezime);
+	printf("\t%d\t%10s\t%10s\n\n", temp->id, temp->ime, temp->prezime);
 	do {
 
 		printf("Koju varijablu zelite urediti\n");
@@ -294,20 +312,20 @@ void uredi_clana(CLAN* head) {
 		case'1':
 			getchar();
 			printf("Unesi novi ID: ");
-			scanf("%d", &head->id);
-			break;
+			scanf("%d", &temp->id);
+			return;
 		case'2':
 			getchar();
 			printf("Unesi novo ime clana: ");
-			scanf("%[^\n]", &head->ime);
+			scanf("%[^\n]", &temp->ime);
 			return;
 		case'3':
 			getchar();
 			printf("Unesi novo prezime clana: ");
-			scanf("%s", &head->prezime);
-			break;
+			scanf("%s", &temp->prezime);
+			return;
 		}
-	} while (choice != 'z');
+	} while (choice != 8);
 
 }
 
@@ -316,10 +334,13 @@ void zapis_edita_clana(LISTA_CLANOVA* head) {
 	int ret;
 	FILE* fp_temp;
 	CLAN* flg = head->glava;
+	if (head->glava == NULL) {
+		return;
+	}
 	fp_temp = fopen("tmp_cln.bin", "wb");
 	if (!fp_temp) {
 		printf("nemoguce otvoriti temp file u brisanju");
-		return NULL;
+		return ;
 	}
 	fwrite(&zad_id_clanova, sizeof(int), 1, fp_temp);
 	while (flg->next != NULL) {
@@ -336,45 +357,99 @@ void zapis_edita_clana(LISTA_CLANOVA* head) {
 	ret = remove("clanovi.bin");
 
 	if (ret == 0) {
-		printf("Uspjesno upisani u datoteku clanovi\n");
+		printf("\nUspjesno upisani u datoteku clanovi\n");
 	}
 	else {
-		printf("Error: unable to delete the file");
+		printf("Error: nije moguc upis u datoteku clanova\n");
 	}
 
 	rename("tmp_cln.bin", "clanovi.bin");
 }
 
-void posudba(CLAN* clan,KNJIGA*knjiga) {
-	knjiga->id_clana = clan->id;
-	knjiga->state = 1;
+void posudba(LISTA_CLANOVA* clan,LISTA_KNJIGA*knjiga) {
+	int choice_id;
+	int choice_id_knjiga;
+	CLAN* check=NULL;
+	KNJIGA* check_knj=NULL;
+	if (clan->glava == NULL || knjiga->glava == NULL) {
+		return;
+	}
+	ispis_clanova(clan, knjiga);
+
+	do {
+		printf("\nUnesite ID-clana koji posuduje knjigu: ");
+		scanf("%d", &choice_id);
+		check = nadi_clana(clan, choice_id);
+	} while (check == NULL&&printf("\nKnjiga s tim ID-om ne postoji\n"));
+
+	ispis_knjiga(knjiga);
+	getchar();
+	do {
+		printf("\nUnesite ID-knjige koji posuduje knjigu: ");
+		scanf("%d", &choice_id_knjiga);
+		check_knj = nadi_knjigu(knjiga, choice_id_knjiga);
+	} while ((check_knj == NULL || check_knj->state == 1) && printf("\nKnjiga je posudena ili ne postoji\n"));
+	check_knj->id_clana = check->id;
+	check_knj->state = 1;
 	time_t vrijeme ;
 	struct tm* datum;
 	time(&vrijeme);
 	datum = localtime(&vrijeme);
-	strftime(knjiga->date, 30, "%c", datum);
-	clan->book+=1;
-	for (int i = 0; i < clan->book; i++) {
-		if (clan->books[i] == 0) {
-			clan->books[i] = knjiga->id;
+	strftime(check_knj->date, 30, "%c", datum);
+	check->book+=1;
+	for (int i = 0; i < check->book; i++) {
+		if (check->books[i] == 0) {
+			check->books[i] = check_knj->id;
 		}
 	}
 }
 
-void vracanje(CLAN* clan, KNJIGA* knjiga) {
-	int j=0;
-	knjiga->id_clana = NULL;
-	knjiga->state = 0;
+void vracanje(LISTA_CLANOVA* clan, LISTA_KNJIGA* knjiga) {
+	int j=0,br=0;
+	int choice_id;
+	int choice_id_knjiga;
+	CLAN* check = NULL;
+	KNJIGA* check_knj = NULL;
+	KNJIGA* p = NULL;
+	if (clan->glava == NULL || knjiga->glava == NULL) {
+		return;
+	}
+	ispis_clanova(clan, knjiga);
+	do {
+		printf("\nUnesite ID-clana koji vraca knjigu: ");
+		scanf("%d", &choice_id);
+		check = nadi_clana(clan, choice_id);
+	
+	} while ((check == NULL || check->book == 0) && printf("\nKorisnik nema posudenu knjigu ili ne postoji\n"));
+	
+	printf("ID\tIME KNJIGE\tAUTOR KNJIGE\n\n");
+	do {
+		p = nadi_knjigu(knjiga, check->books[br++]);
+		if (p == NULL) {
+			break;
+		}
+		printf("%d\t%s\t\t%s\t\n", p->id, p->ime, p->autor_prezime);
+	} while (check->book != 0);
+	br = 0;
+	getchar();
+	do {
+		printf("\nUnesite ID-knjige koju korisnik vraca: ");
+		scanf("%d", &choice_id_knjiga);
+		check_knj = nadi_knjigu(knjiga, choice_id_knjiga);
+	} while ((check_knj == NULL || check_knj->id_clana != check->id) && printf("\nDrugi korisnik je posudio ovu knjigu ili ne postoji\n"));
+
+	check_knj->id_clana = 0;
+	check_knj->state = 0;
 	while (j < 30) {
-		knjiga->date[j++] = '\0';
+		check_knj->date[j++] = '\0';
 	}
 	
-	for (int i = 0; i < clan->book; i++) {
-		if (clan->books[i] == knjiga->id) {
-			clan->books[i] = 0;
+	for (int i = 0; i < check->book; i++) {
+		if (check->books[i] == check_knj->id) {
+			check->books[i] = 0;
 		}
 	}
-	clan->book -= 1;
+	check->book -= 1;
 }
 
 void det_ispis(LISTA_KNJIGA* lista, LISTA_CLANOVA* lista_clan) {
@@ -387,18 +462,21 @@ void det_ispis(LISTA_KNJIGA* lista, LISTA_CLANOVA* lista_clan) {
 	printf("   ID\t\tDATUM POSUDBE\t\t\tIME\t  AUTOR\t\t  ZANR\t STATUS\n");
 	while (pointer->next != NULL) {
 
-		printf("%d. %d%30s\t   %10s\t%s %s\t%5s", br,pointer->id, pointer->date, pointer->ime, pointer->autor_ime, pointer->autor_prezime, pointer->zanr);
+		printf("%d. %d%30s\t %10s\t  %s %s\t%5s", br,pointer->id, pointer->date, pointer->ime, pointer->autor_ime, pointer->autor_prezime, pointer->zanr);
 		if (pointer->state == 1) {
 			printf("\tPOSUDENA\n");
 
 		}
-		else(printf("\n"));
+		else(printf("\tNIJE POSUDENA\n"));
 		pointer = pointer->next;
 		br++;
 	}
-	printf("%d. %d%30s\t   %10s\t%s %s\t%5s", br,pointer->id, pointer->date, pointer->ime, pointer->autor_ime, pointer->autor_prezime, pointer->zanr);
+	printf("%d. %d%30s\t %10s\t  %s %s\t%5s", br,pointer->id, pointer->date, pointer->ime, pointer->autor_ime, pointer->autor_prezime, pointer->zanr);
 	if (pointer->state == 1) {
 		printf("\tPOSUDENA\n");
 	}
-	printf("\n");
+	else if (pointer->state == 0) {
+		printf("\tNIJE POSUDENA\n");
+	}
+	
 }
