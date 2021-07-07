@@ -140,7 +140,7 @@ void ispis_clanova(LISTA_CLANOVA* lista,LISTA_KNJIGA*lista_knjiga) {
 				break;
 			}
 			printf("%s\t", p->ime);
-		} while (pointer->book != 0&&p==NULL);
+		} while (pointer->book != 0||p==NULL);
 			
 		br_2 = 0;
 		pointer = pointer->next;
@@ -384,7 +384,7 @@ void det_ispis(LISTA_KNJIGA* lista, LISTA_CLANOVA* lista_clan) {
 	if (lista->glava == NULL) {
 		return;
 	}
-	printf("   ID\t\tDATUM POSUDBE\t\t\tIME\tAUTOR\t\tZANR\n");
+	printf("   ID\t\tDATUM POSUDBE\t\t\tIME\t  AUTOR\t\t  ZANR\t STATUS\n");
 	while (pointer->next != NULL) {
 
 		printf("%d. %d%30s\t   %10s\t%s %s\t%5s", br,pointer->id, pointer->date, pointer->ime, pointer->autor_ime, pointer->autor_prezime, pointer->zanr);
