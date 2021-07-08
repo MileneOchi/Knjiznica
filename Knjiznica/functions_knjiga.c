@@ -100,7 +100,7 @@ KNJIGA* zapisi_knjigu(char* ime_datoteke) {
 		scanf("%s", &headNode->autor_ime);
 		printf("Unesite prezime autora knjige: ");
 		scanf("%s", &headNode->autor_prezime);
-		printf("Unesite zanr kjige: ");
+		printf("Unesite zanr knjige: ");
 		scanf("%s", &headNode->zanr);
 		getchar();
 	}
