@@ -152,24 +152,13 @@ void dodaj_knjigu(LISTA_KNJIGA* dll, KNJIGA* temp) {
 	}
 }
 void obrisi_knjigu(LISTA_KNJIGA* dll) {
-	FILE* fp;
-	FILE* fp_temp;
 	KNJIGA temp_dat;
 	int foundDat = 0;
 	int id_knjige;
 	if (dll->glava == NULL) {
 		return;
 	}
-	fp = fopen("knjige.bin", "rb");
-	if (!fp) {
-		printf("nemoguce otvoriti");
-		return;
-	}
-	fp_temp = fopen("tmp_knj.bin", "wb");
-	if (!fp_temp) {
-		printf("nemoguce otvoriti temp file u brisanju");
-		return;
-	}
+
 	printf("Unesite ID clana kojeg zelite obrisati: ");
 	scanf("%d", &id_knjige);
 	KNJIGA* temp;
@@ -201,28 +190,7 @@ void obrisi_knjigu(LISTA_KNJIGA* dll) {
 		temp->prev->next= temp->next;
 		free(temp);
 	}
-	fwrite(&zad_id_knjiga, sizeof(int), 1, fp_temp);
-	int fill;
-	fread(&fill, sizeof(int), 1, fp);
-	while (fread(&temp_dat, sizeof (KNJIGA), 1, fp) != NULL) {
-		if (temp_dat.id==id_knjige) {
-			printf("Pronadjena i obrisana iz datoteke.\n\n");
-			foundDat = 1;
-		}
-		else {
-			fwrite(&temp_dat, sizeof(KNJIGA), 1, fp_temp);
-		}
-	}
-	if (!foundDat) {
-		printf("Nije pronaden nijedna knjiga s ID: %d u datoteci.\n\n", id_knjige);
-	}
-
-	fclose(fp);
-	fclose(fp_temp);
-
-	remove("knjige.bin");
-	rename("tmp_knj.bin", "knjige.bin");
-	getchar();
+	zapis_edita_knjige(dll);
 
 }
 

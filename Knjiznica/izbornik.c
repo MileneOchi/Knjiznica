@@ -82,12 +82,12 @@ void izbornik() {
 					system("cls");
 					popisClanova = ucitaj_podatke("clanovi.bin");
 					if (popisClanova->glava == NULL && popisClanova->rep == NULL) {
-						printf("Nema clanova za ispis\n");
+						printf("Nema clanova za brisanje\n");
 
 					}
 					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");
 					if (popisKnjiga->glava == NULL && popisKnjiga->rep == NULL) {
-						printf("Nema knjiga za ispis\n");
+						printf("Nema knjiga za brisanje\n");
 
 					}
 

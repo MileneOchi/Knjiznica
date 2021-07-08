@@ -48,22 +48,10 @@ void dodaj_clan(LISTA_CLANOVA* dll, CLAN* temp) {
 	}
 }
 void obrisi_clana(LISTA_CLANOVA* dll) {
-	FILE* fp;
-	FILE* fp_temp;
 	CLAN temp_dat;
 	int foundDat = 0;
 	int id_clan;
 	if (dll->glava == NULL&&dll->rep==NULL) {
-		return;
-	}
-	fp = fopen("clanovi.bin", "rb");
-	if (!fp) {
-		printf("nemoguce otvoriti");
-		return ;
-	}
-	fp_temp = fopen("tmp.bin", "wb");
-	if (!fp_temp) {
-		printf("nemoguce otvoriti temp file u brisanju");
 		return;
 	}
 	printf("Unesite ID clana kojeg zelite obrisati: ");
@@ -97,28 +85,8 @@ void obrisi_clana(LISTA_CLANOVA* dll) {
 		temp->prev->next= temp->next;
 		free(temp);
 	}
-	fwrite(&zad_id_clanova, sizeof(int), 1, fp_temp);
-	int fill;
-	fread(&fill, sizeof(int), 1, fp);
-	while (fread(&temp_dat, sizeof (CLAN), 1, fp) != NULL) {
-		if (temp_dat.id==id_clan) {
-			printf("Pronadjen i obrisan iz datoteke.\n\n");
-			foundDat = 1;
-		}
-		else {
-			fwrite(&temp_dat, sizeof(CLAN), 1, fp_temp);
-		}
-	}
-	if (!foundDat) {
-		printf("Nije pronaden nijedan clan s ID: %d u datoteci.\n\n", id_clan);
-	}
 
-	fclose(fp);
-	fclose(fp_temp);
-
-	remove("clanovi.bin");
-	rename("tmp.bin", "clanovi.bin");
-
+	zapis_edita_clana(dll);
 
 }
 
@@ -146,14 +114,13 @@ void ispis_clanova(LISTA_CLANOVA* lista,LISTA_KNJIGA*lista_knjiga) {
 	while (pointer->next != NULL) {
 
 		printf("%d.\t%d\t%10s\t%10s\t   %d \t\t", br, pointer->id, pointer->ime, pointer->prezime,pointer->book);
-		
-		do {
+		for (int i = 0; i < 10; i++) {
 			p = nadi_knjigu(lista_knjiga, pointer->books[br_2++]);
-			if (p == NULL) {
-				break;
+			if (p != NULL) {
+				printf("%s\t", p->ime);
 			}
-			printf("%s\t", p->ime);
-		} while (pointer->book != 0||p==NULL);
+		}
+
 			
 		br_2 = 0;
 		pointer = pointer->next;
