@@ -30,6 +30,9 @@ void izbornik() {
 				printf("\nPritisnite backspace za povratak");
 				choice_two = _getch();
 				switch (choice_two) {
+				case'9':
+					brisanje_file("clanovi.bin");
+					break;
 				case '1':
 					system("cls");
 					popisClanova = ucitaj_podatke("clanovi.bin");
@@ -140,6 +143,9 @@ void izbornik() {
 				printf("\nPritisnite backspace za povratak...");
 				choice_two = _getch();
 				switch (choice_two) {
+				case'9':
+					brisanje_file("knjige.bin");
+					break;
 				case '1':
 					system("cls");
 					popisKnjiga = ucitaj_podatke_knjiga("knjige.bin");

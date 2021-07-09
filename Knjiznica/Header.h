@@ -36,4 +36,5 @@ void zapis_edita_clana(LISTA_CLANOVA*);
 void posudba(LISTA_CLANOVA*,LISTA_KNJIGA*);
 void vracanje(LISTA_CLANOVA*, LISTA_KNJIGA*);
 void det_ispis(LISTA_KNJIGA*, LISTA_CLANOVA*);
+void brisanje_file(const char*);
 #endif

@@ -48,9 +48,22 @@ void dodaj_clan(LISTA_CLANOVA* dll, CLAN* temp) {
 	}
 }
 void obrisi_clana(LISTA_CLANOVA* dll) {
+	FILE* fp;
+	FILE* fp_temp;
+	CLAN temp_dat;
 	int foundDat = 0;
 	int id_clan;
 	if (dll->glava == NULL) {
+		return;
+	}
+	fp = fopen("clanovi.bin", "rb");
+	if (!fp) {
+		printf("nemoguce otvoriti");
+		return;
+	}
+	fp_temp = fopen("tmp.bin", "wb");
+	if (!fp_temp) {
+		printf("nemoguce otvoriti temp file u brisanju");
 		return;
 	}
 	printf("Unesite ID clana kojeg zelite obrisati: ");
@@ -84,9 +97,34 @@ void obrisi_clana(LISTA_CLANOVA* dll) {
 		temp->prev->next= temp->next;
 		free(temp);
 	}
+	if (dll->glava == NULL) {
+		fwrite(&zad_id_clanova, sizeof(int), 1, fp_temp);
+		int fill;
+		fread(&fill, sizeof(int), 1, fp);
+		while (fread(&temp_dat, sizeof(CLAN), 1, fp) != NULL) {
+			if (temp_dat.id == id_clan) {
+				printf("Pronadjen i obrisan iz datoteke.\n\n");
+				foundDat = 1;
+			}
+			else {
+				fwrite(&temp_dat, sizeof(CLAN), 1, fp_temp);
+			}
+		}
+		if (!foundDat) {
+			printf("Nije pronaden nijedan clan s ID: %d u datoteci.\n\n", id_clan);
+		}
 
-	zapis_edita_clana(dll);
+		fclose(fp);
+		fclose(fp_temp);
 
+		remove("clanovi.bin");
+		rename("tmp.bin", "clanovi.bin");
+	}
+	else {
+		fclose(fp);
+		fclose(fp_temp);
+		zapis_edita_clana(dll);
+	}
 }
 
 CLAN* nadi_clana(LISTA_CLANOVA* dll, int id) {
@@ -443,4 +481,7 @@ void det_ispis(LISTA_KNJIGA* lista, LISTA_CLANOVA* lista_clan) {
 		printf("\tNIJE POSUDENA\n");
 	}
 	
+}void brisanje_file(const char* ime) {
+	int flg;
+	flg = remove(ime);
 }
